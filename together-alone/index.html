@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Together, Alone for Sacha</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Public+Sans:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one short column, three numbered steps (they are a real order), then the links. */
+:root{
+  --page:#f4f5f3; --surface:#fcfcfb; --ink:#141514; --ink-2:#4f504c; --muted:#76776f; --line:#e1e2dc; --note:#eef0ec; --focus:#2a78d6; --sacha:#eb6834;
+  --display:"Barlow Condensed","Arial Narrow",system-ui,sans-serif; --body:"Public Sans",system-ui,-apple-system,"Segoe UI",sans-serif; --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--page:#0f100f;--surface:#1a1a19;--ink:#f3f3ef;--ink-2:#c3c2b7;--muted:#8f8f88;--line:#2c2c2a;--note:#232422;--focus:#3987e5;--sacha:#e0703f;color-scheme:dark}}
+:root[data-theme="dark"]{--page:#0f100f;--surface:#1a1a19;--ink:#f3f3ef;--ink-2:#c3c2b7;--muted:#8f8f88;--line:#2c2c2a;--note:#232422;--focus:#3987e5;--sacha:#e0703f;color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--page);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.55;margin:0}
+.wrap{max-width:760px;margin:0 auto;padding-inline:20px;padding-block:32px 64px;display:grid;gap:22px}
+a{color:var(--focus);text-underline-offset:3px}
+a:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+.eyebrow{font-family:var(--display);font-weight:600;letter-spacing:.12em;text-transform:uppercase;font-size:13px;color:var(--muted)}
+h1{font-family:var(--display);font-weight:700;font-size:clamp(38px,7vw,60px);line-height:.95;text-transform:uppercase;margin:4px 0 10px;text-wrap:balance}
+h2{font-family:var(--display);font-weight:600;font-size:24px;text-transform:uppercase;letter-spacing:.03em;margin:0}
+p{margin:0}
+.sub{color:var(--ink-2);max-width:62ch}
+ol.steps{list-style:none;margin:0;padding:0;display:grid;gap:12px;counter-reset:s}
+ol.steps>li{counter-increment:s;display:grid;grid-template-columns:44px minmax(0,1fr);gap:12px;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px}
+ol.steps>li::before{content:counter(s);font-family:var(--display);font-weight:700;font-size:34px;line-height:1;color:var(--sacha)}
+.step{display:grid;gap:8px;min-width:0}
+.step h2{font-size:21px}
+.step ul{margin:0;padding-left:18px;display:grid;gap:4px;color:var(--ink-2);font-size:15px}
+.btns{display:flex;flex-wrap:wrap;gap:8px}
+.btns a{display:inline-flex;border:1px solid var(--line);border-radius:999px;padding:5px 12px;font-size:14px;font-weight:600;text-decoration:none;color:var(--ink);background:var(--page)}
+.btns a.primary{background:var(--ink);color:var(--surface);border-color:var(--ink)}
+.btns a:hover{border-color:var(--ink-2)}
+.note{background:var(--note);border-radius:8px;padding:12px 14px;font-size:14px;color:var(--ink-2)}
+.dates{display:grid;gap:4px;margin:0;padding:0;list-style:none;font-size:15px}
+.dates li{display:grid;grid-template-columns:120px minmax(0,1fr);gap:10px}
+.dates .w{font-family:var(--mono);font-size:13.5px;color:var(--ink-2)}
+footer{font-size:12.5px;color:var(--muted)}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Together, Alone · Blue Sheep Films</div>
+    <h1>For Sacha</h1>
+    <p class="sub">Everything about the film's money and the decisions in front of us, in three steps. The money master is the source of truth: when you add your payments there, the budget, the 60/40, the cash flow and the Spending hub all follow, to the cent.</p>
+  </header>
+
+  <ol class="steps">
+    <li><div class="step">
+      <h2>Read the brief at a glance</h2>
+      <p>The 5 Oct briefing as pictures: the next ten days, what only you can answer, where the money stands, the two ways to even out the 60/40, and the decisions still open.</p>
+      <div class="btns"><a class="primary" href="brief.html">Brief at a glance</a><a href="https://docs.google.com/document/d/1k6erEfX0IHmJ1ppTYV33NymzTQpibJhoojlxHnXE1Mo/edit" target="_blank" rel="noopener">The full briefing (Google Doc) ↗</a></div>
+    </div></li>
+    <li><div class="step">
+      <h2>Add your payments to the money master</h2>
+      <p>One row per payment, from your bank or card statements or e-transfer history: the date, who it went to, what it was for, the amount, and the statement wording or e-transfer reference. Add a receipt link if you have one. No account numbers or balances.</p>
+      <ul>
+        <li><b>Your 2023 shoot money ($7,834 in your report):</b> the Ledger tab, section B. Line 3 counts the reported $7,834 until your list reaches it or you choose Yes at "Is this list complete?" Then it counts exactly what you listed.</li>
+        <li><b>Your post costs since Dec 2025, and anything else since 2023 not counted yet:</b> the Sacha's post costs tab. Mark each as this film only, shared (with this film's %), or another project. It feeds line 8 the moment you type it.</li>
+        <li><b>Anything either of you pays from now on</b> (Riana's instalments, Chris's deposit, the drives, the DCP): the Ledger tab, section G, the day it's paid.</li>
+      </ul>
+      <div class="btns"><a class="primary" href="https://docs.google.com/spreadsheets/d/182VDJ1I1KCoP5u3-xpNBByN_ReSbqA6vz8vSyZw-Mgs/edit#gid=1010&amp;range=A142:L176" target="_blank" rel="noopener">Ledger, section B ↗</a><a href="https://docs.google.com/spreadsheets/d/182VDJ1I1KCoP5u3-xpNBByN_ReSbqA6vz8vSyZw-Mgs/edit#gid=1007&amp;range=A26:K61" target="_blank" rel="noopener">Sacha's post costs tab ↗</a><a href="https://docs.google.com/spreadsheets/d/182VDJ1I1KCoP5u3-xpNBByN_ReSbqA6vz8vSyZw-Mgs/edit#gid=1010&amp;range=A1:L20" target="_blank" rel="noopener">Ledger checks ↗</a></div>
+      <p class="note">JJ's side is complete: 146 payments with dates and references (the 2023 shoot, the pickups and Adelaide's editing), plus Blue Sheep's payment to Riana. The checks at the top of the Ledger tab show which budget lines are fully backed by transactions. Today that's everything except your $7,834.</p>
+    </div></li>
+    <li><div class="step">
+      <h2>Look at the numbers in the Spending hub</h2>
+      <p>Every cost, who pays it, the 60/40 and spending over time to the festival run, with switches to try each proposal. Every amount links to the payments behind it in the money master.</p>
+      <div class="btns"><a class="primary" href="https://claude.ai/artifact/NQVx6GvCohjtYzji1Tdwx7" target="_blank" rel="noopener">Live hub on claude.ai ↗</a><a href="spending-hub.html">Snapshot copy (5 Oct)</a></div>
+      <p class="note">The live hub reads the money master through your Google Sheets connector, so it shows your latest entries. The first time you open it, choose "Show live figures" and allow Google Sheets, signed in with the Google account the money master is shared with. The snapshot copy works offline but stays at 5 Oct.</p>
+    </div></li>
+  </ol>
+
+  <section style="display:grid;gap:10px">
+    <h2>The next ten days</h2>
+    <ul class="dates">
+      <li><span class="w">Mon 5 Oct</span><span>Decide on OAC with JJ. Send JJ your answers.</span></li>
+      <li><span class="w">By Wed 7 Oct</span><span>Agree with JJ and OAC how both 8 Oct Media Artists applications can stand.</span></li>
+      <li><span class="w">This week</span><span>Book ALAS (Artists' Legal Advice Services, free legal help for artists in Ontario) or another legal party.</span></li>
+      <li><span class="w">Thu 8 Oct</span><span>OAC Media Artists deadline, 1 pm.</span></li>
+      <li><span class="w">Tue 13 Oct</span><span>Review the exported TAC application.</span></li>
+      <li><span class="w">Thu 15 Oct</span><span>TAC deadline (JJ submits Wed 14). Riana's first $1,000 instalment.</span></li>
+    </ul>
+  </section>
+
+  <section style="display:grid;gap:10px">
+    <h2>Where everything lives</h2>
+    <div class="btns">
+      <a href="https://docs.google.com/spreadsheets/d/182VDJ1I1KCoP5u3-xpNBByN_ReSbqA6vz8vSyZw-Mgs/edit" target="_blank" rel="noopener">00 MONEY MASTER ↗</a>
+      <a href="https://docs.google.com/document/d/1QLcIiydeuEwHFgC_1aBoII-U72CuJyRlVLTCfHf20BM/edit" target="_blank" rel="noopener">00 STATUS + DECISIONS LOG ↗</a>
+      <a href="https://docs.google.com/document/d/1KWPS2DrF2t0OVXCz09YHt-uphA_DtE1I0cgAG-NwDA4/edit" target="_blank" rel="noopener">Chain of title plan ↗</a>
+      <a href="https://docs.google.com/spreadsheets/d/1jfNopmGK7lKeKaF6ex76tcDJ4y8YgzNdF37u8TwiROw/edit" target="_blank" rel="noopener">TAC-06 budget ↗</a>
+      <a href="https://claude.ai/artifact/6FFtM4C3GnGz3BzzFSuwrN" target="_blank" rel="noopener">Brief at a glance on claude.ai ↗</a>
+    </div>
+  </section>
+  <footer>Put together by Claude for JJ, 5 Oct 2026. Google links open with the Google account they're shared with. Not legal, tax or accounting advice.</footer>
+</div>
+
+</body>
+</html>

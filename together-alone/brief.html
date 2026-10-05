@@ -1,0 +1,388 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Together, Alone Brief at a Glance</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Public+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one reading column like a production report; each section answers one question, charts sit inside the section they explain. Same identity as the Spending Hub. */
+:root{
+  --page:#f4f5f3; --surface:#fcfcfb; --ink:#141514; --ink-2:#4f504c; --muted:#76776f; --line:#e1e2dc; --axis:#c3c4bc; --note:#eef0ec; --focus:#2a78d6;
+  --jj:#2a78d6; --sacha:#eb6834; --bs:#8a8880; --tac:#1baf7a; --oac:#eda100; --owners:#6d5bd0; --flag:#9a5b00; --good:#006300; --warn-bg:#fbf0dc;
+  --display:"Barlow Condensed","Arial Narrow",system-ui,sans-serif;
+  --body:"Public Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --page:#0f100f; --surface:#1a1a19; --ink:#f3f3ef; --ink-2:#c3c2b7; --muted:#8f8f88; --line:#2c2c2a; --axis:#3a3a37; --note:#232422; --focus:#3987e5;
+    --jj:#3987e5; --sacha:#e0703f; --bs:#9a988f; --tac:#199e70; --oac:#c98500; --owners:#8f80ec; --flag:#e0a040; --good:#0ca30c; --warn-bg:#2e2516; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --page:#0f100f; --surface:#1a1a19; --ink:#f3f3ef; --ink-2:#c3c2b7; --muted:#8f8f88; --line:#2c2c2a; --axis:#3a3a37; --note:#232422; --focus:#3987e5;
+  --jj:#3987e5; --sacha:#e0703f; --bs:#9a988f; --tac:#199e70; --oac:#c98500; --owners:#8f80ec; --flag:#e0a040; --good:#0ca30c; --warn-bg:#2e2516; color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--page);color:var(--ink);font-family:var(--body);font-size:15.5px;line-height:1.55;margin:0}
+.wrap{max-width:980px;margin:0 auto;padding-inline:20px;padding-block:28px 64px}
+a{color:inherit;text-underline-offset:3px}
+a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+h1,h2,h3{text-wrap:balance;margin:0}
+p{margin:0}
+.eyebrow{font-family:var(--display);font-weight:600;letter-spacing:.12em;text-transform:uppercase;font-size:13px;color:var(--muted)}
+header.top{display:grid;gap:10px;padding-bottom:20px;border-bottom:1px solid var(--line);margin-bottom:22px}
+header.top h1{font-family:var(--display);font-weight:700;font-size:clamp(36px,6vw,58px);line-height:.95;text-transform:uppercase;letter-spacing:.01em}
+header.top .sub{color:var(--ink-2);max-width:66ch}
+.links{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+.links a{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:5px 12px;font-size:13.5px;font-weight:600;text-decoration:none}
+.links a:hover{border-color:var(--ink-2)}
+.links a.primary{background:var(--ink);color:var(--surface);border-color:var(--ink)}
+section{padding-block:26px;border-bottom:1px solid var(--line);display:grid;gap:14px}
+section:last-of-type{border-bottom:none}
+section h2{font-family:var(--display);font-weight:600;font-size:27px;text-transform:uppercase;letter-spacing:.03em}
+.lede{color:var(--ink-2);max-width:68ch}
+.small{font-size:13px;color:var(--ink-2)}
+.mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px}
+/* In short */
+.short{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:10px}
+.short .card{display:grid;gap:4px}
+.short b{font-weight:700}
+.short .k{font-family:var(--display);font-weight:600;letter-spacing:.08em;text-transform:uppercase;font-size:13px;color:var(--muted)}
+.short .card.urgent{border-color:var(--flag);background:var(--warn-bg)}
+/* Calendar strip */
+.strip{overflow-x:auto;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
+.days{display:grid;grid-template-columns:repeat(11,minmax(84px,1fr));min-width:924px}
+.day{border-right:1px solid var(--line);padding:10px 8px;display:grid;align-content:start;gap:6px;min-height:150px}
+.day:last-child{border-right:none}
+.day .d{font-family:var(--display);font-weight:600;font-size:15px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
+.day.today .d{color:var(--ink)}
+.day.today{background:var(--note)}
+.ev{font-size:12.5px;line-height:1.35;border-left:3px solid var(--ink-2);padding-left:6px}
+.ev.you{border-left-color:var(--sacha)}
+.ev.jj{border-left-color:var(--jj)}
+.ev.both{border-left-color:var(--owners)}
+.ev.fund{border-left-color:var(--tac)}
+.legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:13px;color:var(--ink-2)}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.sw{width:11px;height:11px;border-radius:2px;flex:none;display:inline-block}
+.later{display:grid;gap:6px;margin:0;padding:0;list-style:none}
+.later li{display:grid;grid-template-columns:110px minmax(0,1fr);gap:12px;font-size:14px}
+.later .when{font-family:var(--mono);font-size:13px;color:var(--ink-2)}
+/* Questions */
+.qs{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:10px}
+.q{display:grid;gap:8px;align-content:start}
+.q h3{font-size:16px;font-weight:700;line-height:1.35}
+.q .why{font-size:13.5px;color:var(--ink-2)}
+.q a.go{justify-self:start;font-size:13px;font-weight:600;color:var(--focus);text-decoration:underline;text-decoration-style:dotted}
+/* Bars */
+.barblock{display:grid;gap:10px}
+.brow{display:grid;grid-template-columns:150px minmax(0,1fr) 92px;gap:10px;align-items:center}
+.brow .name{font-size:13.5px;font-weight:600;color:var(--ink-2)}
+.brow .val{font-family:var(--mono);font-size:13px;text-align:right;font-variant-numeric:tabular-nums}
+.track{display:flex;height:22px;gap:2px;min-width:0}
+.seg{height:100%;min-width:2px}
+.seg.plan{opacity:.55}
+.big{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px}
+.big .card b{display:block;font-size:26px;font-weight:700;line-height:1.15}
+.big .card span{font-size:13px;color:var(--ink-2)}
+@media (max-width:600px){.brow{grid-template-columns:minmax(0,1fr) 84px}.brow .name{grid-column:1 / -1}.brow .track{grid-column:1}}
+/* 60/40 */
+.share{position:relative;height:28px;display:flex;border-radius:4px;overflow:hidden}
+.share .m{position:absolute;top:-6px;bottom:-6px;left:60%;width:2px;background:var(--ink)}
+.share-wrap{position:relative;padding-top:22px}
+.share-wrap .ml{position:absolute;top:0;left:60%;transform:translateX(-50%);font-size:12px;font-weight:700}
+.opts{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:12px}
+.opt{display:grid;gap:8px;align-content:start}
+.opt h3{font-family:var(--display);font-weight:600;font-size:20px;text-transform:uppercase;letter-spacing:.03em}
+.opt .tot{display:flex;gap:16px;flex-wrap:wrap;font-size:14px}
+.opt .tot b{font-family:var(--mono);font-weight:500}
+.chart svg{display:block;width:100%;height:auto}
+/* Decisions */
+.dec{display:grid;gap:0;border:1px solid var(--line);border-radius:10px;background:var(--surface);overflow:hidden}
+.dec .row{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1.6fr) 176px;gap:14px;padding:12px 14px;border-bottom:1px solid var(--line)}
+.dec .row:last-child{border-bottom:none}
+.dec .row.head{font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;background:var(--note)}
+.dec .what{font-weight:600}
+.dec .sug{font-size:14px;color:var(--ink-2)}
+.chip{display:inline-block;font-size:12px;font-weight:700;padding:2px 9px;border-radius:999px;border:1px solid var(--line);background:var(--note);white-space:nowrap}
+.chip.hot{border-color:var(--flag);color:var(--flag);background:var(--warn-bg)}
+@media (max-width:700px){.dec .row{grid-template-columns:minmax(0,1fr)}.dec .row.head{display:none}}
+/* Applications diagram */
+.clash{display:grid;grid-template-columns:minmax(0,1fr) 110px minmax(0,1fr);gap:16px;align-items:center}
+.app{display:grid;gap:6px}
+.app h3{font-size:15px;font-weight:700}
+.app ul{margin:0;padding-left:18px;font-size:13.5px;color:var(--ink-2)}
+.clash .mid{display:grid;justify-items:center;gap:4px;text-align:center;font-size:12px;font-weight:700;color:var(--flag)}
+.clash .mid svg{width:100%;height:40px}
+@media (max-width:700px){.clash{grid-template-columns:minmax(0,1fr)}.clash .mid svg{height:28px;transform:rotate(90deg);width:40px}}
+.ways{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}
+.ways .card{font-size:14px}
+.ways .card b{display:block;margin-bottom:4px}
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;min-width:640px;font-size:13.5px}
+th,td{padding:9px 12px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;background:var(--note)}
+tr:last-child td{border-bottom:none}
+/* Ownership */
+.own{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
+.own .card h3{font-family:var(--display);font-weight:600;font-size:19px;text-transform:uppercase;letter-spacing:.03em;margin-bottom:6px}
+.split{display:flex;height:34px;border-radius:6px;overflow:hidden;margin:8px 0 6px;font-weight:700;font-size:13px;color:#fff}
+.split div{display:flex;align-items:center;padding-left:10px}
+.steps{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;counter-reset:s}
+.steps li{counter-increment:s;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px;font-size:13.5px;display:grid;gap:4px}
+.steps li::before{content:counter(s);font-family:var(--display);font-weight:700;font-size:22px;line-height:1;color:var(--muted)}
+.steps b{font-size:14.5px}
+.facts{margin:0;padding-left:18px;display:grid;gap:4px;font-size:14px;color:var(--ink-2);max-width:78ch}
+footer{margin-top:34px;font-size:12.5px;color:var(--muted);max-width:80ch}
+</style>
+</head>
+<body>
+<div style="max-width:1180px;margin:0 auto;padding:12px 20px 0;font:13px/1.45 var(--body,system-ui),sans-serif;color:var(--ink-2,#4f504c)">Snapshot of the brief at a glance, 5 Oct 2026. The full briefing and the money master stay the source of truth.</div>
+
+<div class="wrap">
+  <header class="top">
+    <div class="eyebrow">Together, Alone · briefing for Sacha</div>
+    <h1>The brief at a glance</h1>
+    <p class="sub">The 5 Oct 2026 briefing, as pictures: what's due this week, what only you can answer, where the money stands and the decisions you and JJ still have to make. The full briefing and the money master stay the source of truth. Not legal, tax or accounting advice.</p>
+    <div class="links">
+      <a class="primary" href="https://docs.google.com/spreadsheets/d/182VDJ1I1KCoP5u3-xpNBByN_ReSbqA6vz8vSyZw-Mgs/edit#gid=1010&amp;range=A142:L176" target="_blank" rel="noopener">Add your payments (Ledger) ↗</a>
+      <a href="https://docs.google.com/document/d/1k6erEfX0IHmJ1ppTYV33NymzTQpibJhoojlxHnXE1Mo/edit" target="_blank" rel="noopener">Full briefing ↗</a>
+      <a href="https://docs.google.com/spreadsheets/d/182VDJ1I1KCoP5u3-xpNBByN_ReSbqA6vz8vSyZw-Mgs/edit" target="_blank" rel="noopener">Money master ↗</a>
+      <a href="https://claude.ai/artifact/NQVx6GvCohjtYzji1Tdwx7" target="_blank" rel="noopener">Spending hub (live) ↗</a>
+      <a href="https://docs.google.com/document/d/1QLcIiydeuEwHFgC_1aBoII-U72CuJyRlVLTCfHf20BM/edit" target="_blank" rel="noopener">Status + decisions log ↗</a>
+    </div>
+  </header>
+
+  <section aria-labelledby="h-short">
+    <h2 id="h-short">In short</h2>
+    <div class="short">
+      <div class="card urgent"><span class="k">Due today, Mon 5 Oct</span><span><b>Decide on OAC</b> with JJ, and settle whose application names whom before Thu 8 Oct (see below).</span></div>
+      <div class="card"><span class="k">TAC · Thu 15 Oct</span><span>JJ applies alone (TAC takes only the director) for <b>$13,800</b>: Chris's music, the song licences, colour and $750 of new storage drives.</span></div>
+      <div class="card"><span class="k">The budget</span><span><b>$77,179.06</b> in all. After TAC and OAC, you and JJ still need <b>$16,712.75</b> between you.</span></div>
+      <div class="card"><span class="k">The 60/40</span><span>JJ has paid <b>$6,651.72</b> more than his 60% so far. Two ways to even it out, below.</span></div>
+      <div class="card"><span class="k">Your payments</span><span>List every payment you've made for the film on the money master. Each line you add counts toward the budget and the 60/40, to the cent.</span></div>
+      <div class="card"><span class="k">Chain of title</span><span>Not complete yet, but the plan is in the Drive and all 18 missing agreements are drafted for ALAS (Artists' Legal Advice Services, free legal help for artists in Ontario) or another legal party to review.</span></div>
+    </div>
+  </section>
+
+  <section aria-labelledby="h-week">
+    <h2 id="h-week">The next ten days</h2>
+    <p class="lede">The colour on each item says whose it is. JJ handles most of them; the orange ones are yours.</p>
+    <div class="legend" aria-hidden="true"><span><i class="sw" style="background:var(--sacha)"></i>You</span><span><i class="sw" style="background:var(--jj)"></i>JJ</span><span><i class="sw" style="background:var(--owners)"></i>You and JJ</span><span><i class="sw" style="background:var(--tac)"></i>Payment</span></div>
+    <div class="strip" role="region" aria-label="Calendar, 5 to 15 October 2026" tabindex="0"><div class="days" id="days"></div></div>
+    <ul class="later">
+      <li><span class="when">15 Dec 2026</span><span>TAC's project period starts. Chris starts recording; you and JJ front his $2,000 deposit (you $800, JJ $1,200) and the grant pays it back.</span></li>
+      <li><span class="when">31 Dec 2026</span><span>The rights-reversion date in the unsigned April 2025 draft. Sign SET-01 and doc 01 well before it.</span></li>
+      <li><span class="when">Apr 2027</span><span>Delivery: Riana's final mix, colour, the DCP and the storage drives.</span></li>
+      <li><span class="when">May–Sep 2027</span><span>Festival submissions.</span></li>
+    </ul>
+  </section>
+
+  <section aria-labelledby="h-you">
+    <h2 id="h-you">What only you can answer</h2>
+    <p class="lede">Put each answer where the link goes. Everything you type in the money master flows straight into the budget, the 60/40, the cash flow and the Spending hub.</p>
+    <div class="qs">
+      <div class="card q"><h3>What did your $7,834 for the 2023 shoot pay for?</h3><p class="why">List each payment, one row per transaction: date, who it went to, what for, amount, and the statement or e-transfer reference. Line 3 counts the reported $7,834 until your list reaches it or you mark it complete; then it counts exactly what you listed.</p><a class="go" href="https://docs.google.com/spreadsheets/d/182VDJ1I1KCoP5u3-xpNBByN_ReSbqA6vz8vSyZw-Mgs/edit#gid=1010&amp;range=A142:L176" target="_blank" rel="noopener">Ledger, section B ↗</a></div>
+      <div class="card q"><h3>Which post costs since Dec 2025 were for this film?</h3><p class="why">Include LIFT rentals (the ADR room, pickup gear, suite time), with receipts. Your report's $17,747 is out of the budget until you list this film's lines, and every line you list lowers the 60/40 gap.</p><a class="go" href="https://docs.google.com/spreadsheets/d/182VDJ1I1KCoP5u3-xpNBByN_ReSbqA6vz8vSyZw-Mgs/edit#gid=1007&amp;range=A26:K61" target="_blank" rel="noopener">Sacha's post costs tab ↗</a></div>
+      <div class="card q"><h3>Did you pay for anything else for the film, 2023 to 2026?</h3><p class="why">The 60/40 can't be settled without it. Add it to the same post costs list, marked this film only or shared.</p><a class="go" href="https://docs.google.com/spreadsheets/d/182VDJ1I1KCoP5u3-xpNBByN_ReSbqA6vz8vSyZw-Mgs/edit#gid=1007&amp;range=A26:K61" target="_blank" rel="noopener">Sacha's post costs tab ↗</a></div>
+      <div class="card q"><h3>Which grant applications this year name JJ or Blue Sheep?</h3><p class="why">As applicant or named collaborator. Your notes list Not Another Word to OAC (8 Oct) and TAC (15 Oct), with JJ as editor. OAC counts names across applications.</p><span class="small"><b>Tell JJ before Thu 8 Oct</b></span></div>
+      <div class="card q"><h3>Whose names are on title for the cottage?</h3><p class="why">They sign the cottage's location release, not you.</p><span class="small"><b>Tell JJ</b></span></div>
+    </div>
+    <p class="small">Leave Adelaide, the pickups and the ADR session out: JJ's records and Blue Sheep's already cover them.</p>
+  </section>
+
+  <section aria-labelledby="h-money">
+    <h2 id="h-money">Where the money stands</h2>
+    <div class="big">
+      <div class="card"><b class="mono">$77,179</b><span>the whole budget, start to delivery</span></div>
+      <div class="card"><b class="mono">$36,666</b><span>spent so far (48%)</span></div>
+      <div class="card"><b class="mono">$23,800</b><span>asked of TAC and OAC, pending</span></div>
+      <div class="card"><b class="mono">$16,713</b><span>still to find from you and JJ</span></div>
+    </div>
+    <p class="lede">Each bar is one part of the film. Solid colour is money already spent, by whoever actually paid it; the lighter colour is still to pay, by whoever is planned to pay it.</p>
+    <div class="legend" aria-hidden="true">
+      <span><i class="sw" style="background:var(--jj)"></i>JJ (paid)</span><span><i class="sw" style="background:var(--sacha)"></i>You (paid)</span><span><i class="sw" style="background:var(--bs)"></i>Blue Sheep (paid)</span>
+      <span><i class="sw" style="background:var(--owners);opacity:.55"></i>You and JJ (to pay)</span><span><i class="sw" style="background:var(--tac);opacity:.55"></i>TAC (pending)</span><span><i class="sw" style="background:var(--oac);opacity:.55"></i>OAC (pending)</span>
+    </div>
+    <div class="barblock" id="cats"></div>
+    <p class="small">Without OAC, its $10,000 (VFX, the legal lines and E and O insurance) moves to you and JJ: $26,712.75 to find. The camera kit is out of the budget until you agree a value (Claude's proposal: $3,077.97, the rental value for the days the owned gear was used; your report's $18,700 was what it cost to buy).</p>
+  </section>
+
+  <section aria-labelledby="h-split">
+    <h2 id="h-split">Evening out the 60/40</h2>
+    <p class="lede">Every dollar spent on the film is shared 60/40. So far JJ has paid 78% of the owners' cash, which puts him $6,651.72 ahead of his 60%. Your own payments that you list on the money master shrink the gap under either option.</p>
+    <div class="share-wrap" aria-label="Owners' cash paid so far: JJ $28,380.31 (78.4%), Sacha $7,834 (21.6%), against a 60/40 split">
+      <span class="ml">60%</span>
+      <div class="share"><div style="width:78.37%;background:var(--jj)"></div><div style="width:21.63%;background:var(--sacha)"></div><span class="m"></span></div>
+    </div>
+    <p class="small"><span class="mono">JJ $28,380.31 (78.4%)</span> · <span class="mono">You $7,834 (21.6%)</span> · owners' cash only, not grants, Blue Sheep's payment, gear or labour.</p>
+    <div class="opts">
+      <div class="card opt"><h3>Option 1 · fill the gap over time</h3><p class="small">You pay the shared bills in full (Riana's instalments, then her balance) until you've caught up, about $11,086 of bills. Even on 30 Apr 2027, then 60/40.</p><div class="chart" id="o1"></div><div class="tot"><span>From here: JJ <b>$3,375.93</b></span><span>You <b>$13,336.82</b></span></div></div>
+      <div class="card opt"><h3>Option 2 · figure it out down the line</h3><p class="small">Every bill is 60/40 from now. The $6,651.72 stays on record as owed to JJ, and you settle it together later. Write the amount down, for example in SET-01.</p><div class="chart" id="o2"></div><div class="tot"><span>From here: JJ <b>$10,027.65</b></span><span>You <b>$6,685.10</b></span></div></div>
+    </div>
+    <div class="legend" aria-hidden="true"><span><i class="sw" style="background:var(--jj)"></i>JJ pays</span><span><i class="sw" style="background:var(--sacha)"></i>You pay</span><span class="small">February is below the line: TAC pays back Chris's deposit.</span></div>
+    <p class="small">Claude suggests either option, or another strategy moving forward, unless information is missing (your post costs, say). The money master's Cash flow 60-40 tab works out the others: send the gap now, send part of it now, or take on less of each bill.</p>
+  </section>
+
+  <section aria-labelledby="h-dec">
+    <h2 id="h-dec">Decisions for you and JJ</h2>
+    <p class="lede">Each one is on the money master's To decide tab, with its reasoning. When you both agree, mark it Agreed there and it becomes part of the budget.</p>
+    <div class="dec" role="table" aria-label="Decisions">
+      <div class="row head" role="row"><span role="columnheader">Decision</span><span role="columnheader">Claude suggests</span><span role="columnheader">By</span></div>
+      <div class="row" role="row"><span class="what" role="cell">Does JJ apply to OAC Media Artists for this film (Thu 8 Oct, 1 pm)?</span><span class="sug" role="cell">If yes, OAC pays the VFX, legal and E and O lines ($10,000). If he keeps the slot for NOMAD, that $10,000 moves to you and JJ.</span><span role="cell"><span class="chip hot">Today, Mon 5 Oct</span></span></div>
+      <div class="row" role="row"><span class="what" role="cell">How to even out the 60/40</span><span class="sug" role="cell">Option 1 or Option 2 above, or another strategy.</span><span role="cell"><span class="chip">Before 15 Oct</span></span></div>
+      <div class="row" role="row"><span class="what" role="cell">The camera kit's value in the budget</span><span class="sug" role="cell">$3,077.97: what renting the same gear would have cost for the days it was used.</span><span role="cell"><span class="chip">Before TAC</span></span></div>
+      <div class="row" role="row"><span class="what" role="cell">Will's colour fee</span><span class="sug" role="cell">$5,000 for conform, grade and festival masters. TAC pays $1,200; the other $3,800 is Will's in-kind contribution, or deferred.</span><span role="cell"><span class="chip">Before TAC</span></span></div>
+      <div class="row" role="row"><span class="what" role="cell">Chris LaRocca's fee</span><span class="sug" role="cell">$4,000. At $5,000 the TAC request would be $14,800, still under its $15,000 limit.</span><span role="cell"><span class="chip">Before the music letters</span></span></div>
+      <div class="row" role="row"><span class="what" role="cell">Register "Blue Sheep Films" as Blue Sheep Inc.'s business name</span><span class="sug" role="cell">Yes: Ontario law requires it because the company trades under that name. $60 online, for 5 years; you or Will files it, as directors.</span><span role="cell"><span class="chip">This month</span></span></div>
+      <div class="row" role="row"><span class="what" role="cell">JJ's writing fee</span><span class="sug" role="cell">$2,500, deferred: paid from the film's income after costs, with JJ paid last.</span><span role="cell"><span class="chip">With SET-01</span></span></div>
+      <div class="row" role="row"><span class="what" role="cell">Deferred fees for the unpaid cast and crew</span><span class="sug" role="cell">About $24,554 at the GTA living wage ($217.60 a day), paid from the film's income after costs.</span><span role="cell"><span class="chip">Before doc 03</span></span></div>
+      <div class="row" role="row"><span class="what" role="cell">Profit shares</span><span class="sug" role="cell">They need updating. Will Sheppard gets a share (JJ, 5 Oct); agree how much. The draft has 12.5% each for Rachel and Ben.</span><span role="cell"><span class="chip">Before doc 03</span></span></div>
+      <div class="row" role="row"><span class="what" role="cell">Andrea Pavlovic's fee</span><span class="sug" role="cell">Settled only after ALAS or another legal party has reviewed the plan.</span><span role="cell"><span class="chip">After legal review</span></span></div>
+    </div>
+  </section>
+
+  <section aria-labelledby="h-apps">
+    <h2 id="h-apps">Our names on several applications</h2>
+    <p class="lede">OAC Media Artists won't let a collaborator named on one application be the applicant or a collaborator on another at the same deadline. If both 8 Oct applications go in as they stand, you're each on two, and one or both could be ruled ineligible before anyone reads them.</p>
+    <div class="card clash">
+      <div class="app"><h3>JJ · Together, Alone</h3><ul><li>OAC Media Artists, Thu 8 Oct</li><li>Plan since 2 Oct: you, Will and Riana listed as people involved, not collaborators</li></ul></div>
+      <div class="mid" aria-hidden="true"><svg viewBox="0 0 120 40" preserveAspectRatio="none"><path d="M6 12 H114 M104 4 L114 12 L104 20" fill="none" stroke="var(--flag)" stroke-width="2"/><path d="M114 28 H6 M16 20 L6 28 L16 36" fill="none" stroke="var(--flag)" stroke-width="2"/></svg><span>Same deadline</span></div>
+      <div class="app"><h3>You · Not Another Word</h3><ul><li>OAC Media Artists, Thu 8 Oct (#439532)</li><li>JJ named as editor: as a collaborator, or as paid crew?</li></ul></div>
+    </div>
+    <div class="ways">
+      <div class="card"><b>JJ as paid crew on yours</b>If OAC accepts that, he isn't a collaborator on your application, and his own can go in.</div>
+      <div class="card"><b>You as people involved on his</b>Not a collaborator, which only works if JJ isn't a collaborator on yours.</div>
+      <div class="card"><b>One of you waits</b>The next OAC Media Artists deadline is March 2027.</div>
+    </div>
+    <p class="small">Agree which way round with JJ and the OAC officer (Amber Yared) by Wed 7 Oct. This cycle Together, Alone goes to TAC and OAC Media Artists only (JJ's decision).</p>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Funder</th><th>The rule</th><th>What it means for us</th></tr></thead>
+      <tbody>
+        <tr><td>OAC</td><td>One application per program per deadline; up to three project grants a year, each for a different activity.</td><td>If Media Artists goes to Together, Alone this year, NOMAD waits for 2027.</td></tr>
+        <tr><td>TAC</td><td>Only the director applies. One discipline grant a year. The applicant keeps full copyright and creative control.</td><td>You and JJ can each apply as director of your own film. Blue Sheep mustn't look as if it owns or controls the film (SET-01, doc 01).</td></tr>
+        <tr><td>Both</td><td>No cost paid twice. OAC pays only once the other revenue is confirmed. A late final report blocks the next application.</td><td>Both budgets list the other request with matching figures. Every application tells the same story: 60/40, JJ directs, you produce.</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <section aria-labelledby="h-own">
+    <h2 id="h-own">Who owns what, and the order to sign</h2>
+    <div class="own">
+      <div class="card"><h3>The film</h3><div class="split"><div style="width:60%;background:var(--jj)">JJ 60%</div><div style="width:40%;background:var(--sacha)">You 40%</div></div><p class="small">The copyright stays with you and JJ for now: TAC and OAC fund only a director who keeps it. Revisit when a distributor, investor or Telefilm is involved; a new company owned 60/40 would take it then (SET-02). Ownership stays 60/40 whoever paid what.</p></div>
+      <div class="card"><h3>Blue Sheep Inc.</h3><p class="small">The production services company: it takes the "A Blue Sheep Films Production" credit and owns nothing in the film (doc 01). Will co-owns Blue Sheep, so if Blue Sheep owned the film, Will would own part of it. It pays people for the film only with both owners' written approval, from money you provide.</p></div>
+    </div>
+    <ol class="steps" aria-label="Signing order">
+      <li><b>SET-01</b>You and JJ confirm the term sheet</li>
+      <li><b>Doc 01</b>The Blue Sheep agreement</li>
+      <li><b>Docs 02 and 03</b>JJ's writer's certificate, then profit shares</li>
+      <li><b>Everyone else</b>Crew, cast, music, then locations</li>
+    </ol>
+    <p class="small">Date each document the day it's signed; never backdate. ALAS or another legal party reviews the drafts first. Performer work (pickups, ADR, voice-over) waits for that review too.</p>
+  </section>
+
+  <section aria-labelledby="h-facts">
+    <h2 id="h-facts">Settled facts</h2>
+    <ul class="facts">
+      <li>Shoot days: 1–14 June, 22–25 Sept, 27–29 Oct and 4, 6 and 7 Dec 2023. Pickups: 22–25 Sept 2025 and 4 May 2026.</li>
+      <li>"Rangefinder Films" in the term sheet was a placeholder name for you, never a company.</li>
+      <li>Every 2023 payment from JJ's accounts is named and dated: 118 payments, $20,689.54, each on the money master's Ledger tab.</li>
+      <li>All of Adelaide's $6,250 was JJ's money. Blue Sheep paid Riana's $452 invoice.</li>
+      <li>June 2023 gear: Nick Depencier's RED Komodo; Will Sheppard's Contax lenses (all but one) and Z CAM. Titan's Komodo was rented for the rest of 2023 ($1,050, paid).</li>
+      <li>Siyao Guo is fully paid. Siyao uses she/her; Rachel uses they/them.</li>
+    </ul>
+  </section>
+
+  <footer>Built by Claude for JJ from the briefing doc and the 00 MONEY MASTER, 5 Oct 2026. The money master is the source of truth for every figure; the Spending hub reads it live. Not legal, tax or accounting advice.</footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var $ = function(id){ return document.getElementById(id); };
+  var f0 = function(n){ return (n < 0 ? "−$" : "$") + Math.round(Math.abs(n)).toLocaleString("en-CA"); };
+  var f2 = function(n){ return (n < 0 ? "−$" : "$") + Math.abs(n).toLocaleString("en-CA", {minimumFractionDigits:2, maximumFractionDigits:2}); };
+  function esc(s){ return String(s).replace(/[&<>"']/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]; }); }
+
+  // Next ten days (5–15 Oct 2026)
+  var EV = {
+    5: [["you","Send JJ your answers"],["both","Decide on OAC"]],
+    6: [], 7: [["both","Agree with OAC how both 8 Oct applications stand"],["jj","Peter Kingstone, TAC (or Fri 9)"],["you","Book ALAS or another legal party this week"]],
+    8: [["jj","OAC Media Artists, 1 pm (if JJ applies)"]],
+    9: [["jj","Peter Kingstone, if not Wed"]],
+    10: [["jj","Signed music letters back"]],
+    11: [], 12: [],
+    13: [["you","Review the exported TAC application"]],
+    14: [["jj","JJ submits TAC"]],
+    15: [["fund","Riana's first $1,000 (Option 1: you $1,000; Option 2: you $400, JJ $600)"],["jj","TAC deadline"]]
+  };
+  var dn = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"], html = "";
+  for (var d = 5; d <= 15; d++) {
+    var wd = dn[new Date(Date.UTC(2026, 9, d)).getUTCDay()];
+    html += "<div class='day" + (d === 5 ? " today" : "") + "'><span class='d'>" + wd + " " + d + "</span>" + (EV[d] || []).map(function(e){ return "<span class='ev " + e[0] + "'>" + esc(e[1]) + "</span>"; }).join("") + "</div>";
+  }
+  $("days").innerHTML = html;
+
+  // Where the money goes: [name, [[payer, amount, planned?], ...]]
+  var CATS = [
+    ["2023 shoot", [["--jj",20689.54,0,"JJ paid"],["--sacha",7834,0,"You paid"]]],
+    ["Sound: ADR, sound post, mix", [["--bs",452,0,"Blue Sheep paid"],["--owners",10900,1,"You and JJ, $1,000 a month from 15 Oct"]]],
+    ["Music: Chris and the songs", [["--tac",11850,1,"TAC, if funded"]]],
+    ["Legal and business", [["--oac",8500,1,"OAC, if funded: chain-of-title opinion, deal memos, incorporation, E and O"]]],
+    ["Editing (Adelaide)", [["--jj",6250,0,"JJ paid"]]],
+    ["Delivery and archive", [["--owners",3312.75,1,"You and JJ: DCP, captions, M and E, and the rest of the drives"],["--tac",750,1,"TAC: $750 of the storage drives"]]],
+    ["Festivals", [["--owners",2500,1,"You and JJ"]]],
+    ["VFX clean-up", [["--oac",1500,1,"OAC, if funded"]]],
+    ["Pickups", [["--jj",1440.77,0,"JJ paid"]]],
+    ["Colour", [["--tac",1200,1,"TAC, if funded"]]]
+  ];
+  var max = Math.max.apply(null, CATS.map(function(c){ return c[1].reduce(function(t,s){ return t + s[1]; }, 0); }));
+  var total = 0;
+  $("cats").innerHTML = CATS.map(function(c){
+    var sum = c[1].reduce(function(t,s){ return t + s[1]; }, 0); total += sum;
+    var segs = c[1].map(function(s){ return "<div class='seg" + (s[2] ? " plan" : "") + "' style='width:" + (s[1]/max*100).toFixed(3) + "%;background:var(" + s[0] + ")' title='" + esc(s[3] + ": " + f2(s[1])) + "'></div>"; }).join("");
+    var label = c[1].map(function(s){ return s[3] + " " + f2(s[1]); }).join("; ");
+    return "<div class='brow'><span class='name'>" + esc(c[0]) + "</span><div class='track' role='img' aria-label='" + esc(c[0] + ": " + label) + "'>" + segs + "</div><span class='val'>" + f0(sum) + "</span></div>";
+  }).join("");
+  if (Math.abs(total - 77179.06) > 0.01) console.error("Categories don't add up", total);
+
+  // 60/40 options: what each pays per month from here
+  var MONTHS = ["Oct","Nov","Dec","Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep"];
+  var O1 = [[0,1000],[0,1000],[1200,1800],[0,1000],[-1200,200],[0,1000],[1875.93,6336.82],[300,200],[300,200],[300,200],[300,200],[300,200]];
+  var O2 = [[600,400],[600,400],[1800,1200],[600,400],[-600,-400],[600,400],[4927.65,3285.10],[300,200],[300,200],[300,200],[300,200],[300,200]];
+  function sum(a, i){ return a.reduce(function(t,x){ return t + x[i]; }, 0); }
+  if (Math.abs(sum(O1,0) - 3375.93) > .01 || Math.abs(sum(O1,1) - 13336.82) > .01 || Math.abs(sum(O2,0) - 10027.65) > .01 || Math.abs(sum(O2,1) - 6685.10) > .01) console.error("Option totals don't match");
+  function chart(el, data, label){
+    var W = 460, H = 210, pl = 44, pr = 6, pt = 10, pb = 26;
+    var hi = 7000, lo = -2000;
+    var Y = function(v){ return pt + (hi - v)/(hi - lo)*(H - pt - pb); };
+    var gw = (W - pl - pr)/data.length, bw = Math.max(4, gw/2 - 3);
+    var s = "<svg viewBox='0 0 " + W + " " + H + "' role='img' aria-label='" + esc(label) + "'>";
+    [-2000,0,2000,4000,6000].forEach(function(v){
+      s += "<line x1='" + pl + "' x2='" + (W - pr) + "' y1='" + Y(v) + "' y2='" + Y(v) + "' stroke='var(" + (v === 0 ? "--axis" : "--line") + ")' stroke-width='1'/>";
+      s += "<text x='" + (pl - 6) + "' y='" + (Y(v) + 4) + "' text-anchor='end' font-size='10.5' font-family='var(--mono)' fill='var(--muted)'>" + (v === 0 ? "$0" : (v < 0 ? "−" : "") + "$" + Math.abs(v/1000) + "k") + "</text>";
+    });
+    data.forEach(function(m, i){
+      var x = pl + i*gw + gw/2;
+      [[m[0],"--jj",-bw-1],[m[1],"--sacha",1]].forEach(function(b){
+        var y0 = Y(0), y1 = Y(b[0]);
+        s += "<rect x='" + (x + b[2]).toFixed(1) + "' y='" + Math.min(y0,y1).toFixed(1) + "' width='" + bw.toFixed(1) + "' height='" + Math.max(0.5, Math.abs(y1 - y0)).toFixed(1) + "' fill='var(" + b[1] + ")'><title>" + MONTHS[i] + (i < 3 ? " 2026" : " 2027") + ": " + (b[1] === "--jj" ? "JJ " : "You ") + f2(b[0]) + "</title></rect>";
+      });
+      s += "<text x='" + x.toFixed(1) + "' y='" + (H - 8) + "' text-anchor='middle' font-size='10.5' font-family='var(--body)' fill='var(--muted)'>" + MONTHS[i] + "</text>";
+    });
+    return s + "</svg>";
+  }
+  $("o1").innerHTML = chart($("o1"), O1, "Option 1, month by month from Oct 2026 to Sep 2027: you pay most of the bills until April 2027, then 60/40");
+  $("o2").innerHTML = chart($("o2"), O2, "Option 2, month by month from Oct 2026 to Sep 2027: every bill split 60/40");
+})();
+</script>
+
+</body>
+</html>

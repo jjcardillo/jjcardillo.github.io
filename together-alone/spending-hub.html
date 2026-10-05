@@ -1,0 +1,1118 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Together, Alone Spending Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Public+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a film cost report. Results column on the left, a sticky "choices" panel on the right; on phones the choices sit under the two stacked bars. */
+:root{
+  --page:#f4f5f3; --surface:#fcfcfb; --ink:#141514; --ink-2:#4f504c; --muted:#76776f; --line:#e1e2dc; --axis:#c3c4bc;
+  --control:#141514; --control-ink:#fcfcfb; --focus:#2a78d6; --note:#eef0ec;
+  --jj:#2a78d6; --jj-track:#cde2fb; --sacha:#eb6834; --sacha-track:#fbdccd;
+  --tac:#1baf7a; --oac:#eda100; --kind:#e87ba4; --deferred:#4a3aa7; --added:#008300;
+  --spent:#52514e; --committed:#898781; --tospend:#b9b8af; --tbc:#a9a8a0;
+  --good:#006300; --flag:#9a5b00;
+  --display:"Barlow Condensed","Arial Narrow",system-ui,sans-serif;
+  --body:"Public Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --page:#0f100f; --surface:#1a1a19; --ink:#f3f3ef; --ink-2:#c3c2b7; --muted:#8f8f88; --line:#2c2c2a; --axis:#3a3a37;
+    --control:#f3f3ef; --control-ink:#141514; --focus:#3987e5; --note:#232422;
+    --jj:#3987e5; --jj-track:#1d3556; --sacha:#d95926; --sacha-track:#4a2616;
+    --tac:#199e70; --oac:#c98500; --kind:#d55181; --deferred:#9085e9; --added:#008300;
+    --spent:#d6d5cd; --committed:#898781; --tospend:#5f5e59; --tbc:#6e6d67;
+    --good:#0ca30c; --flag:#e0a040; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --page:#0f100f; --surface:#1a1a19; --ink:#f3f3ef; --ink-2:#c3c2b7; --muted:#8f8f88; --line:#2c2c2a; --axis:#3a3a37;
+  --control:#f3f3ef; --control-ink:#141514; --focus:#3987e5; --note:#232422;
+  --jj:#3987e5; --jj-track:#1d3556; --sacha:#d95926; --sacha-track:#4a2616;
+  --tac:#199e70; --oac:#c98500; --kind:#d55181; --deferred:#9085e9; --added:#008300;
+  --spent:#d6d5cd; --committed:#898781; --tospend:#5f5e59; --tbc:#6e6d67;
+  --good:#0ca30c; --flag:#e0a040; color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--page);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.5;margin:0}
+.wrap{max-width:1180px;margin:0 auto;padding-inline:20px;padding-block:28px 64px}
+a{color:inherit;text-underline-offset:3px}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,[tabindex]:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+h1,h2,h3{text-wrap:balance;margin:0}
+.eyebrow{font-family:var(--display);font-weight:600;letter-spacing:.12em;text-transform:uppercase;font-size:13px;color:var(--muted)}
+header.top{display:flex;flex-wrap:wrap;gap:16px 32px;align-items:flex-end;justify-content:space-between;padding-bottom:20px;border-bottom:1px solid var(--line);margin-bottom:24px}
+header.top h1{font-family:var(--display);font-weight:700;font-size:clamp(34px,5vw,52px);line-height:1;letter-spacing:.01em;text-transform:uppercase}
+header.top p{margin:8px 0 0;color:var(--ink-2);max-width:62ch}
+.slate{display:grid;grid-template-columns:auto auto;gap:2px 14px;font-family:var(--mono);font-size:12px;color:var(--ink-2);border:1px solid var(--line);padding:10px 12px;border-radius:6px;background:var(--surface)}
+.slate b{font-weight:500;color:var(--ink)}
+.layout{display:grid;grid-template-columns:minmax(0,1fr) 360px;grid-template-areas:"kpi side" "stack side" "time side" "split side" "ladder side" "table side";gap:28px 32px;align-items:start}
+.kpis{grid-area:kpi}.stack{grid-area:stack}.time{grid-area:time}.split{grid-area:split}.ladder{grid-area:ladder}.lines{grid-area:table}
+aside.side{grid-area:side;position:sticky;top:calc(env(safe-area-inset-top,0px) + 12px);max-height:calc(100vh - 24px);overflow:auto;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px}
+@media (max-width:900px){
+  .layout{grid-template-columns:minmax(0,1fr);grid-template-areas:"kpi" "stack" "side" "time" "split" "ladder" "table"}
+  aside.side{position:static;max-height:none}
+}
+section h2{font-family:var(--display);font-weight:600;font-size:24px;text-transform:uppercase;letter-spacing:.03em;margin-bottom:4px}
+section .lede{color:var(--ink-2);margin:0 0 14px;max-width:68ch}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px}
+/* KPIs */
+.kpis{display:grid;grid-template-columns:minmax(0,1.4fr) repeat(3,minmax(0,1fr));gap:12px}
+@media (max-width:640px){.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.kpis .hero{grid-column:1 / -1}}
+.kpi{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px 16px;min-width:0}
+.kpi .label{font-size:13px;color:var(--ink-2)}
+.kpi .value{font-weight:600;font-size:24px;line-height:1.2;margin-top:4px}
+.kpi .sub{font-size:12.5px;color:var(--muted);margin-top:4px}
+.kpi.hero .value{font-size:clamp(40px,5vw,52px);font-weight:700;letter-spacing:-.01em}
+.delta{font-size:13px;font-weight:600}
+.delta.up{color:var(--flag)} .delta.down{color:var(--good)}
+/* Bars */
+.barrow{display:grid;grid-template-columns:120px minmax(0,1fr);gap:10px 14px;align-items:center}
+.barrow + .barrow{margin-top:14px}
+.barname{font-size:13px;font-weight:600;color:var(--ink-2)}
+.track{position:relative;height:24px}
+.segs{display:flex;gap:2px;height:24px}
+.seg{height:24px;min-width:0;flex:none;cursor:default;transition:width .25s ease}
+.seg:first-child{border-radius:0}
+.seg.end{border-radius:0 4px 4px 0}
+.axisline{position:relative;height:22px;margin-top:6px;border-top:1px solid var(--axis)}
+.tick{position:absolute;top:0;transform:translateX(-50%);font-family:var(--mono);font-size:11px;color:var(--muted);padding-top:3px;white-space:nowrap}
+.tick::before{content:"";position:absolute;left:50%;top:-1px;width:1px;height:5px;background:var(--axis)}
+.tick.first{transform:none}.tick.first::before{left:0}
+.legend{display:flex;flex-wrap:wrap;gap:6px 18px;margin-top:12px;font-size:13px}
+.legend .item{display:flex;align-items:center;gap:7px;min-width:0}
+.sw{width:10px;height:10px;border-radius:2px;flex:none}
+.legend .amt{font-family:var(--mono);font-size:12px;color:var(--ink-2)}
+.legends{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:4px 24px}
+@media (max-width:640px){.legends{grid-template-columns:minmax(0,1fr)}.barrow{grid-template-columns:minmax(0,1fr)}}
+.legend-title{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-top:14px}
+.check{font-size:13px;color:var(--ink-2);margin-top:12px;display:flex;gap:8px;align-items:center}
+.pill{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;padding:2px 9px;border-radius:999px;border:1px solid var(--line);background:var(--note);color:var(--ink-2);white-space:nowrap}
+.pill.ok::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--good)}
+.pill.warn::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--flag)}
+/* Tooltip */
+#tip{position:fixed;z-index:20;pointer-events:none;background:var(--surface);color:var(--ink);border:1px solid var(--line);box-shadow:0 6px 20px rgba(0,0,0,.14);border-radius:8px;padding:8px 10px;font-size:13px;max-width:260px}
+#tip b{display:block;font-weight:600}
+#tip .n{font-family:var(--mono);font-size:12px;color:var(--ink-2)}
+/* 60/40 */
+.meters{display:grid;gap:12px}
+.meter{display:grid;grid-template-columns:120px minmax(0,1fr) auto;gap:12px;align-items:center}
+@media (max-width:640px){.meter{grid-template-columns:70px minmax(0,1fr)}.meter .mv{grid-column:2}}
+.mtrack{height:14px;border-radius:7px;overflow:hidden;display:flex}
+.mfill{height:100%;transition:width .25s ease}
+.mv{font-family:var(--mono);font-size:12.5px;color:var(--ink-2);white-space:nowrap}
+.share{position:relative;margin-top:18px}
+.share .segs{height:24px}
+.marker{position:absolute;top:-6px;bottom:-6px;width:2px;background:var(--ink);left:60%}
+.marker span{position:absolute;top:-20px;left:50%;transform:translateX(-50%);font-size:11px;font-weight:600;white-space:nowrap;color:var(--ink)}
+.callout{margin-top:16px;padding:14px 16px;border-radius:8px;background:var(--note);display:grid;gap:6px}
+.callout strong{font-weight:600}
+.two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px}
+@media (max-width:640px){.two{grid-template-columns:minmax(0,1fr)}}
+.small{font-size:13px;color:var(--ink-2)}
+/* Ladder */
+.lad-track{position:relative;margin-top:30px}
+.lad-marker{position:absolute;top:-26px;bottom:-4px;width:0;border-left:1px dashed var(--ink-2)}
+.lad-marker span{position:absolute;top:0;left:6px;font-size:11.5px;color:var(--ink-2);white-space:nowrap}
+.lad-marker.flip span{left:auto;right:6px}
+.lad-wrap-clip{overflow:hidden}
+.steps{display:grid;gap:8px;margin:16px 0 0;padding:0;list-style:none}
+.steps li{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:10px;align-items:baseline;padding:8px 0;border-bottom:1px solid var(--line)}
+.steps .k{font-family:var(--display);font-weight:600;font-size:15px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.steps .n{font-family:var(--mono);font-size:13px;white-space:nowrap}
+/* Table */
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;min-width:760px;font-size:13.5px}
+th,td{padding:8px 12px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;background:var(--surface);position:sticky;top:0}
+td.num,th.num{text-align:right;font-family:var(--mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+tr.group td{font-family:var(--display);font-weight:600;font-size:14px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-2);background:var(--note)}
+tr.total td{font-weight:600}
+tr.choice td:first-child{box-shadow:inset 3px 0 0 var(--added)}
+tr.off td{color:var(--muted)}
+.stg{margin-top:3px;font-size:12px;color:var(--muted)}
+th,td{padding:8px 10px}
+td .z{color:var(--muted)}
+tr.sub td{font-weight:600;border-bottom:2px solid var(--line)}
+.stage{display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+/* Controls */
+aside h2{font-family:var(--display);font-weight:700;font-size:22px;text-transform:uppercase;letter-spacing:.04em}
+.presets{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 4px}
+button{font:inherit;cursor:pointer}
+.btn{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;padding:5px 12px;font-size:13px;font-weight:500}
+.btn:hover{border-color:var(--ink-2)}
+.btn.primary{background:var(--control);color:var(--control-ink);border-color:var(--control)}
+.group{border-top:1px solid var(--line);padding-top:14px;margin-top:14px}
+.group h3{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-2);margin-bottom:8px}
+.field{display:grid;gap:4px;margin-bottom:12px}
+.field label,.field .lab{font-size:13.5px;font-weight:600}
+.field .hint{font-size:12.5px;color:var(--muted)}
+select,input[type=number],input[type=text]{font:inherit;font-size:14px;color:var(--ink);background:var(--page);border:1px solid var(--axis);border-radius:6px;padding:6px 8px;width:100%;min-width:0}
+input[type=range]{width:100%;accent-color:var(--sacha)}
+.seg-ctl{display:flex;flex-wrap:wrap;gap:4px}
+.seg-ctl input{position:absolute;opacity:0;pointer-events:none}
+.seg-ctl label{font-size:12.5px;font-weight:500;border:1px solid var(--line);border-radius:6px;padding:5px 8px;cursor:pointer;background:var(--page);line-height:1.3}
+.seg-ctl input:checked + label{background:var(--control);color:var(--control-ink);border-color:var(--control)}
+.seg-ctl input:focus-visible + label{outline:2px solid var(--focus);outline-offset:2px}
+.tog{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:10px;align-items:start;padding:6px 0}
+.tog input{width:18px;height:18px;margin:2px 0 0;accent-color:var(--control)}
+.tog .t{font-size:13.5px;font-weight:600;line-height:1.35}
+.tog .t small{display:block;font-weight:400;color:var(--muted);font-size:12.5px}
+.tog .a{font-family:var(--mono);font-size:12.5px;color:var(--ink-2);white-space:nowrap}
+.inline{display:grid;grid-template-columns:minmax(0,1fr) 110px;gap:8px;align-items:center}
+.custom{display:grid;gap:8px}
+.crow{display:grid;grid-template-columns:minmax(0,1fr) 92px;gap:6px;padding:8px;border:1px solid var(--line);border-radius:8px}
+.crow select{grid-column:1}.crow .rm{grid-column:2;justify-self:end;border:none;background:none;color:var(--ink-2);font-size:12.5px;text-decoration:underline}
+.copied{font-size:12.5px;color:var(--good);min-height:18px}
+footer{margin-top:40px;font-size:12.5px;color:var(--muted);max-width:80ch}
+@media (prefers-reduced-motion:reduce){.seg,.mfill{transition:none}}
+/* Live bar */
+.livebar{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;margin:-8px 0 22px;padding:10px 14px;border:1px solid var(--line);border-radius:8px;background:var(--surface);font-size:13px;color:var(--ink-2)}
+.livebar .ldot{width:9px;height:9px;border-radius:50%;background:var(--muted);flex:none}
+.livebar[data-state="live"] .ldot{background:var(--good)}
+.livebar[data-state="loading"] .ldot{background:var(--focus)}
+.livebar[data-state="error"] .ldot,.livebar[data-state="denied"] .ldot{background:var(--flag)}
+.livebar #live-msg{flex:1 1 260px;min-width:0}
+/* Timeline */
+:root{--curve:#1f6f5c}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--curve:#4cc3a0}}
+:root[data-theme="dark"]{--curve:#4cc3a0}
+.tl-box{position:relative;width:100%;margin-top:6px}
+.tl-box svg{display:block;width:100%;height:auto;overflow:visible}
+.tl-box svg:focus-visible{outline:2px solid var(--focus);outline-offset:4px;border-radius:4px}
+.tl-legend{display:flex;flex-wrap:wrap;gap:6px 18px;margin-top:10px;font-size:13px;color:var(--ink-2)}
+.tl-legend .item{display:flex;align-items:center;gap:7px}
+.tl-line{width:22px;height:0;border-top:3px solid var(--curve)}
+.tl-line.faded{opacity:.42}
+.tl-band{width:14px;height:12px;background:var(--curve);opacity:.12;border-radius:2px}
+.tl-today{width:0;height:14px;border-left:1.5px dashed var(--ink-2)}
+.miles{list-style:none;margin:14px 0 0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:6px 18px;font-size:13px;color:var(--ink-2)}
+.miles li{display:flex;gap:8px;align-items:baseline}
+.miles .num{flex:none;display:inline-grid;place-items:center;width:18px;height:18px;border-radius:50%;background:var(--ink);color:var(--surface);font-size:11px;font-weight:700;font-family:var(--body)}
+.tl-sum{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:14px}
+@media (max-width:640px){.tl-sum{grid-template-columns:minmax(0,1fr)}}
+.tl-sum div{background:var(--note);border-radius:8px;padding:10px 12px}
+.tl-sum b{display:block;font-size:18px;font-weight:600;font-family:var(--body)}
+.tl-sum span{font-size:12.5px;color:var(--ink-2)}
+details.tl-table{margin-top:14px;font-size:13px}
+details.tl-table summary{cursor:pointer;color:var(--ink-2);font-weight:600}
+details.tl-table table{min-width:0;margin-top:8px}
+.srcnote{font-size:13px;color:var(--ink-2);margin-top:12px}
+td.num a,a.rec{text-decoration:underline;text-decoration-style:dotted;text-underline-offset:3px}
+a.rec{color:var(--focus);white-space:nowrap}
+td.num a:hover,a.rec:hover{text-decoration-style:solid}
+
+</style>
+</head>
+<body>
+<div style="max-width:1180px;margin:0 auto;padding:12px 20px 0;font:13px/1.45 var(--body,system-ui),sans-serif;color:var(--ink-2,#4f504c)">Snapshot of the Together, Alone Spending Hub, 5 Oct 2026. It works offline and saves nothing to Drive. Every amount links to its record in 00 MONEY MASTER (open it with the Google account the money master is shared with). The live hub on claude.ai reads the money master directly, so it shows the latest entries.</div>
+
+<div class="wrap">
+  <header class="top">
+    <div>
+      <div class="eyebrow">Together, Alone · the film's money</div>
+      <h1>Spending hub</h1>
+      <p>How the money stacks up: what the film costs, who pays for it, where the 60/40 stands, and what the film has to earn before deferred pay. Change the choices on the right to see what each proposal does. Nothing here changes the money master.</p>
+    </div>
+    <div class="slate" aria-label="Source of these figures">
+      <span>Source</span><b><a href="https://docs.google.com/spreadsheets/d/182VDJ1I1KCoP5u3-xpNBByN_ReSbqA6vz8vSyZw-Mgs/edit" target="_blank" rel="noopener">00 MONEY MASTER</a></b>
+      <span>Figures</span><b id="asof">5 Oct 2026 (snapshot)</b>
+      <span>Split</span><b>JJ 60 · Sacha 40</b>
+      <span>Every payment</span><b><a href="https://docs.google.com/spreadsheets/d/182VDJ1I1KCoP5u3-xpNBByN_ReSbqA6vz8vSyZw-Mgs/edit#gid=1010&amp;range=A1:L20" target="_blank" rel="noopener">Ledger tab</a></b>
+    </div>
+  </header>
+  <div class="livebar" id="livebar" data-state="off" hidden><span class="ldot" aria-hidden="true"></span><span id="live-msg" role="status"></span><button class="btn" type="button" id="live-btn" hidden>Show live figures</button></div>
+
+  <div class="layout">
+    <!-- KPIs -->
+    <div class="kpis" aria-live="polite">
+      <div class="kpi hero"><div class="label">Total budget</div><div class="value" id="k-total">$77,179</div><div class="sub" id="k-total-sub">Cash $77,179 · in kind $0</div></div>
+      <div class="kpi"><div class="label">Spent to date</div><div class="value" id="k-spent">$36,666</div><div class="sub" id="k-spent-sub">JJ $28,380 · Sacha $7,834 · Blue Sheep $452</div></div>
+      <div class="kpi"><div class="label">Still to find from you two</div><div class="value" id="k-find">$16,713</div><div class="sub" id="k-find-sub">Option 2: JJ $10,028 · Sacha $6,685</div></div>
+      <div class="kpi"><div class="label">Owed later, from income</div><div class="value" id="k-owed">$0</div><div class="sub" id="k-owed-sub">Deferred fees, outside the budget</div></div>
+    </div>
+
+    <!-- STACK -->
+    <section class="stack card" aria-labelledby="h-stack">
+      <h2 id="h-stack">How it stacks up</h2>
+      <p class="lede">The top bar is what the film costs; the bottom bar is who pays for it. They always come out the same length, because "still to find" is whatever the grants and what you've already paid don't cover.</p>
+      <div class="barrow"><div class="barname">What it costs</div><div><div class="track"><div class="segs" id="bar-cost" role="img"></div></div></div></div>
+      <div class="barrow"><div class="barname">Who pays</div><div><div class="track"><div class="segs" id="bar-fund" role="img"></div></div><div class="axisline" id="axis"></div></div></div>
+      <div class="legends">
+        <div><div class="legend-title">Costs</div><div class="legend" id="leg-cost"></div></div>
+        <div><div class="legend-title">Paid by</div><div class="legend" id="leg-fund"></div></div>
+      </div>
+      <div class="check" id="balance-check"></div>
+    </section>
+
+
+    <!-- TIMELINE -->
+    <section class="time card" aria-labelledby="h-time">
+      <h2 id="h-time">Spending over time</h2>
+      <p class="lede">Every dollar the film has cost so far and will cost, added up month by month from the first payment in May 2023 to the festival run in 2027. The solid line is money already spent, from the records; the faded line is what the plan still has to pay. Hover or tap a month, or use the arrow keys, to see what was paid.</p>
+      <div class="tl-box" id="timeline"></div>
+      <div class="tl-legend" aria-hidden="true">
+        <span class="item"><span class="tl-line"></span>Spent (from the records)</span>
+        <span class="item"><span class="tl-line faded"></span>Still to spend (the plan)</span>
+        <span class="item"><span class="tl-today"></span>Today</span>
+        <span class="item"><span class="tl-band"></span>Festival submissions</span>
+      </div>
+      <ol class="miles" id="miles"></ol>
+      <div class="tl-sum" id="tl-sum"></div>
+      <p class="srcnote" id="tl-note"></p>
+      <details class="tl-table"><summary>The same figures as a table</summary><div class="tablewrap"><table><thead><tr><th>Month</th><th class="num">Spent</th><th class="num">Planned</th><th class="num">Running total</th><th>What</th></tr></thead><tbody id="tl-rows"></tbody></table></div></details>
+    </section>
+
+    <!-- CONTROLS -->
+    <aside class="side" aria-labelledby="h-choices">
+      <h2 id="h-choices">Your choices</h2>
+      <div class="presets" role="group" aria-label="Start from">
+        <button class="btn" type="button" data-preset="today">Money master today</button>
+        <button class="btn" type="button" data-preset="all">Every proposal on</button>
+        <button class="btn" type="button" data-preset="nogrants">No grants</button>
+      </div>
+
+      <div class="group">
+        <h3>The 60/40 gap from here (not decided yet)</h3>
+        <div class="seg-ctl" role="radiogroup" aria-label="How to even out the 60/40" id="opt">
+          <input type="radio" name="opt" id="opt-2" value="2"><label for="opt-2">Option 2: 60/40 from now</label>
+          <input type="radio" name="opt" id="opt-1" value="1"><label for="opt-1">Option 1: fill the gap</label>
+        </div>
+        <div class="field"><span class="hint" id="opt-hint"></span></div>
+      </div>
+
+      <div class="group">
+        <h3>Camera and lens kit (in kind)</h3>
+        <div class="seg-ctl" role="radiogroup" aria-label="Camera kit value" id="kit"></div>
+        <div class="field"><span class="hint" id="kit-hint"></span></div>
+      </div>
+
+      <div class="group">
+        <h3>Grants</h3>
+        <label class="tog" for="c-tac"><input type="checkbox" id="c-tac"><span class="t">Toronto Arts Council<small>Due Thu 15 Oct. Pays Chris, the songs, colour and $750 of the storage drives. The DCP is out of pocket (JJ, 5 Oct).</small></span><span class="a">$13,800</span></label>
+        <label class="tog" for="c-oac"><input type="checkbox" id="c-oac"><span class="t">Ontario Arts Council<small>Only if JJ applies on Thu 8 Oct for this film.</small></span><span class="a">$10,000</span></label>
+      </div>
+
+      <div class="group">
+        <h3>What Sacha has paid</h3>
+        <div class="field">
+          <label for="c-post">Sacha's post costs he lists as this film's</label>
+          <div class="inline"><input type="range" id="c-post" min="0" max="17747" step="1"><input type="number" id="c-post-n" min="0" max="17747" step="1" aria-label="Sacha's post costs, dollars"></div>
+          <span class="hint" id="post-hint">$0 until he itemises with receipts. His 7 Aug report says up to $17,747, some of it shared with other projects.</span>
+        </div>
+        <div class="field">
+          <label for="c-adr">Riana's ADR session ($452)</label>
+          <select id="c-adr" disabled><option value="bs">Paid by Blue Sheep Inc. (JJ, 5 Oct 2026)</option></select>
+          <span class="hint">From Blue Sheep's BMO account: a company contribution, outside the 60/40.</span>
+        </div>
+      </div>
+
+      <div class="group">
+        <h3>Cash costs to decide (JJ and Sacha pay these)</h3>
+        <label class="tog" for="c-hst"><input type="checkbox" id="c-hst"><span class="t">HST on Riana's sound post<small>13% of $10,900</small></span><span class="a">$1,417</span></label>
+        <label class="tog" for="c-chris"><input type="checkbox" id="c-chris"><span class="t">Chris at $5,000 instead of $4,000<small>Shown as paid by you two. TAC's request is $13,800, so TAC could cover it and stay under $15,000.</small></span><span class="a">+$1,000</span></label>
+        <div class="field">
+          <label for="c-andrea">Andrea: performer minimums and admin fee</label>
+          <select id="c-andrea"><option value="none">Leave out (waits for ALAS or another legal party)</option><option value="2">2 days: $1,381.20</option><option value="3">3 days: $1,676.30</option></select>
+        </div>
+        <label class="tog" for="c-adelaide"><input type="checkbox" id="c-adelaide"><span class="t">Adelaide's invoice #4, if $500 more is owed<small>JJ to ask her</small></span><span class="a">$500</span></label>
+      </div>
+
+      <div class="group">
+        <h3>Fees</h3>
+        <div class="field">
+          <label for="c-will">Will: the rest of a $5,000 colour fee ($3,800)</label>
+          <select id="c-will"><option value="out">Leave out</option><option value="inkind">In kind (shown both sides)</option><option value="deferred">Deferred, from income</option><option value="cash">Cash, from JJ and Sacha</option></select>
+        </div>
+        <div class="field">
+          <label for="c-crew">Deferred fees for unpaid cast and crew</label>
+          <select id="c-crew"><option value="out">Leave out</option><option value="min">Minimum wage: $16,339.60</option><option value="living">Living wage (proposed): $24,553.60</option><option value="actra">Union day rate, as a benchmark: $29,260</option></select>
+          <span class="hint">Rachel, Ben, the rest of the cast, Will as DP, styling, makeup, assistant editor. Days from the 2023 schedule (Cast &amp; crew owed tab).</span>
+        </div>
+        <label class="tog" for="c-writing"><input type="checkbox" id="c-writing"><span class="t">JJ's writing fee, deferred<small>About 3% of the budget (term sheet clause 15)</small></span><span class="a">$2,500</span></label>
+      </div>
+
+      <div class="group">
+        <h3>Try your own line</h3>
+        <div class="custom" id="custom"></div>
+        <button class="btn" type="button" id="add-line" style="margin-top:8px">Add a line</button>
+      </div>
+
+      <div class="group">
+        <button class="btn primary" type="button" id="copy">Copy this scenario as text</button>
+        <div class="copied" id="copied" role="status"></div>
+        <textarea id="copy-fallback" hidden readonly rows="8" style="width:100%;font:12px var(--mono);background:var(--page);color:var(--ink);border:1px solid var(--axis);border-radius:6px;padding:8px"></textarea>
+      </div>
+    </aside>
+
+    <!-- 60/40 -->
+    <section class="split card" aria-labelledby="h-split">
+      <h2 id="h-split">The 60/40</h2>
+      <p class="lede">The rule is that every cost is shared 60/40. What each of you has actually paid isn't 60/40 yet: JJ paid his lines himself (the 2023 shoot, the pickups and Adelaide) and Sacha paid his own <span id="sa-own">$7,834</span>. These bars count the owners' cash only, not grants, Blue Sheep's ADR payment, in-kind gear or labour.</p>
+      <div class="meters">
+        <div class="meter"><div class="barname">JJ</div><div class="mtrack" style="background:var(--jj-track)"><div class="mfill" id="m-jj" style="background:var(--jj)"></div></div><div class="mv" id="mv-jj"></div></div>
+        <div class="meter"><div class="barname">Sacha</div><div class="mtrack" style="background:var(--sacha-track)"><div class="mfill" id="m-sa" style="background:var(--sacha)"></div></div><div class="mv" id="mv-sa"></div></div>
+      </div>
+      <p class="small" style="margin:8px 0 0">Darker part: what each has actually paid so far. Lighter part: what each still pays under the option chosen on the right.</p>
+      <div class="share" id="share-wrap" aria-label="JJ's share of the owners' cash so far, against 60%">
+        <div class="barname" style="margin-bottom:28px">Share of the owners' cash paid so far</div>
+        <div class="track"><div class="segs" id="bar-share"></div><div class="marker"><span>60%</span></div></div>
+      </div>
+      <div class="callout" id="settle"></div>
+    </section>
+
+    <!-- LADDER -->
+    <section class="ladder card" aria-labelledby="h-ladder">
+      <h2 id="h-ladder">What the film has to earn</h2>
+      <p class="lede">The signed term sheet pays the film's income out in order: first JJ and Sacha get their costs back (clause 5), then deferred pay, with JJ and Sacha paid last (clause 6), then profits. Grants and in-kind gear aren't repaid.</p>
+      <div class="lad-track" id="lad-wrap"><div class="segs" id="bar-ladder" role="img"></div><div class="lad-marker" id="lad-floor"><span>$50,000 lowest sale price (cl. 3)</span></div></div>
+      <div class="axisline" id="axis-ladder"></div>
+      <ol class="steps" id="steps"></ol>
+    </section>
+
+    <!-- TABLE -->
+    <section class="lines" aria-labelledby="h-lines">
+      <h2 id="h-lines">Every line</h2>
+      <p class="lede">The Overall budget tab's lines and who pays each one. Money already spent shows who actually paid it, from the records: JJ paid lines 1, 4 and 6 on his own, Sacha paid line 3 on his own, and Blue Sheep Inc. paid the ADR session (line 7). Everything still to pay shows what each of you would pay under the option chosen on the right: a plan, not money paid. Lines your choices add are marked with a green edge. Line numbers match the money master. <b>Every amount is a link:</b> a spent line opens the money master's Ledger tab at the payments behind it (date, who paid, who it went to, the statement reference); a line still to pay opens the Cash flow schedule at the dates it's due.</p>
+      <div class="tablewrap"><table>
+        <thead><tr><th>#</th><th>Line</th><th class="num">Amount</th><th class="num">JJ</th><th class="num">Sacha</th><th class="num">Someone else</th><th>Who pays</th></tr></thead>
+        <tbody id="tbody"></tbody>
+      </table></div>
+    </section>
+  </div>
+
+  <footer>A working view built by Claude for JJ from the 00 MONEY MASTER (Overall budget, Ledger, Who paid, Cash flow 60-40, To decide and Cast &amp; crew owed tabs) as of 5 Oct 2026. Every amount links to its record in the money master: open it with the Google account the money master is shared with. It doesn't save anything to Drive: your choices are remembered only in this browser. When you two agree a figure, mark it Agreed on the money master's To decide tab and it becomes part of the budget. Not accounting, tax or legal advice.</footer>
+</div>
+<div id="tip" hidden></div>
+
+<script>
+(function(){
+  "use strict";
+  var MASTER = "https://docs.google.com/spreadsheets/d/182VDJ1I1KCoP5u3-xpNBByN_ReSbqA6vz8vSyZw-Mgs/edit";
+  // ---- Snapshot of the money master, 5 Oct 2026 ----
+  var BASE = [
+    {n:"1", name:"2023 shoot: JJ's film spending (118 payments, every one named)", stage:"spent", amt:20689.54, pay:"jj", src:"1010&range=A21:L140", when:"118 payments, May – Dec 2023", srcLab:"See every payment", by:"JJ, his own money"},
+    {n:"3", name:"2023 shoot: Sacha's own contribution", stage:"spent", amt:7834, pay:"sacha", src:"1010&range=A142:L175", when:"Sacha's 2023 money: his payments still to list", srcLab:"Ledger, section B", by:"Sacha, his own money"},
+    {n:"4", name:"Pickups, Sept 2025 and May 2026: JJ's film spending", stage:"spent", amt:1440.77, pay:"jj", src:"1010&range=A177:L199", when:"21 payments, Sept 2025 and May 2026", srcLab:"See every payment", by:"JJ, his own money"},
+    {n:"6", name:"Editing, Adelaide Berardi, invoices #1–#8", stage:"spent", amt:6250, pay:"jj", src:"1010&range=A201:L209", when:"7 payments, Jul 2025 – Jul 2026", srcLab:"See every payment", by:"JJ, his own money"},
+    {n:"7", name:"ADR session, Riana Wibowo", stage:"spent", amt:452, pay:"bs", src:"1010&range=A211:L213", when:"1 payment, by Blue Sheep", srcLab:"See the payment", by:"Blue Sheep Inc. (outside the 60/40)"},
+    {n:"9", name:"Sound post, Riana Wibowo: 89 min at $100", stage:"committed", amt:8900, pay:"owners", src:"1009&range=A37:J50", when:"$1,000 a month from 15 Oct 2026; balance 15 Apr 2027", srcLab:"See the schedule", by:"JJ and Sacha, $1,000 a month from 15 Oct"},
+    {n:"10", name:"Studio mix day (8 hours)", stage:"committed", amt:2000, pay:"owners", src:"1009&range=A50:J50", when:"With Riana's balance, 15 Apr 2027", srcLab:"See the schedule", by:"JJ and Sacha"},
+    {n:"11", name:"Chris LaRocca music package", stage:"tospend", amt:4000, pay:"tac", src:"1009&range=A41:J46", when:"Deposit 15 Dec 2026, balance 15 Feb 2027", srcLab:"See the schedule", by:"TAC if funded (JJ and Sacha front the $2,000 deposit 60/40; TAC pays it back)"},
+    {n:"12", name:"Licensed songs and short cues", stage:"tospend", amt:7850, pay:"tac", src:"1009&range=A47:J47", when:"15 Mar 2027", srcLab:"See the schedule", by:"TAC if funded"},
+    {n:"13", name:"Colour suite and conform", stage:"tospend", amt:1200, pay:"tac", src:"1009&range=A51:J51", when:"15 Apr 2027", srcLab:"See the schedule", by:"TAC if funded"},
+    {n:"14", name:"DCP, closed captions, M and E track", stage:"tospend", amt:2300, pay:"owners", src:"1009&range=A52:J52", when:"30 Apr 2027", srcLab:"See the schedule", by:"JJ and Sacha, out of pocket (JJ, 5 Oct 2026)"},
+    {n:"14b", name:"Long-term storage drives for keeping the film: 4 × 8 TB", stage:"tospend", amt:1762.75, pay:"tacpart", tacPart:750, src:"1009&range=A53:J53", when:"30 Apr 2027", srcLab:"See the schedule", by:"TAC $750 if funded (its limit on equipment) · JJ and Sacha the rest"},
+    {n:"15", name:"VFX clean-up", stage:"tospend", amt:1500, pay:"oac", src:"1009&range=A48:J48", when:"15 Mar 2027", srcLab:"See the schedule", by:"OAC if funded"},
+    {n:"16", name:"Chain-of-title legal opinion", stage:"tospend", amt:3000, pay:"oac", src:"1009&range=A57:J57", when:"15 Jun 2027", srcLab:"See the schedule", by:"OAC if funded"},
+    {n:"17", name:"Deal memos and contracts", stage:"tospend", amt:1500, pay:"oac", src:"1009&range=A54:J54", when:"15 May 2027", srcLab:"See the schedule", by:"OAC if funded"},
+    {n:"18", name:"Incorporation and minute book", stage:"tospend", amt:1500, pay:"oac", src:"1009&range=A61:J61", when:"15 Aug 2027, only if needed", srcLab:"See the schedule", by:"OAC if funded"},
+    {n:"19", name:"E and O insurance", stage:"tospend", amt:2500, pay:"oac", src:"1009&range=A59:J59", when:"15 Jul 2027", srcLab:"See the schedule", by:"OAC if funded"},
+    {n:"20", name:"Festival submission fees", stage:"tospend", amt:2500, pay:"owners", src:"1009&range=A55:J62", when:"$500 a month, May – Sep 2027", srcLab:"See the schedule", by:"JJ and Sacha"}
+  ];
+  // ---- Spending over time (Ledger tab + Cash flow schedule, 5 Oct 2026) ----
+  var SPENT_MONTHS = [["2023-05", 4125.66, "Prep for the June shoot: Bathurst AutoPro (car repair) $1,594.43, Liise Keeling (intimacy coordinator) $1,200, 17 other payments $1,331.23"], ["2023-06", 8920.66, "Principal photography, 1–14 June: Siyao Guo (sound) $1,990, Ben Rosenberg (lights) $1,400, Adobe $909.50, 28 other payments $4,621.16"], ["2023-07", 653.79, "After the June shoot: lab, a wardrobe reimbursement, software, less Ben's $159.80 refund (7 payments)"], ["2023-08", 291.37, "Lab, software and supplies (7 payments)"], ["2023-09", 1550.74, "September block: Titan Films (camera) $350, film stock and lab $305.67, 15 other payments $895.07"], ["2023-10", 2829.82, "October block: Siyao Guo (sound) $800, Downtown Camera $592.69, Urban Outfitters $449.74, 15 other payments $987.39"], ["2023-11", 490.95, "Siyao Guo (sound) $226 and supplies (6 payments)"], ["2023-12", 1826.55, "December block: Staples $704.51, Siyao Guo (sound) $452, Titan Films (camera) $350, 7 other payments $320.04"], ["2025-07", 1000.0, "Editing: Adelaide Berardi, invoice #1"], ["2025-08", 1000.0, "Editing: Adelaide Berardi, invoice #2"], ["2025-09", 1213.77, "Pickup 1: camera, makeup, props, food and gas, plus Sacha $250 and Will $180 (17 payments)"], ["2025-10", 1500.0, "Editing: Adelaide Berardi, invoices #3 and #4"], ["2025-11", 1000.0, "Editing: Adelaide Berardi, invoice #5"], ["2026-05", 1727.0, "Editing: Adelaide Berardi, invoices #6 and #7 $1,500; Pickup 2: LIFT, lumber, crew meal $227"], ["2026-07", 702.0, "Sound: Riana Wibowo $452 (paid by Blue Sheep); editing: Adelaide Berardi, invoice #8 $250"]];
+  var PLAN_MONTHS = [["2026-10", 1000, "Riana Wibowo: sound post, payment 1 (15 Oct)"], ["2026-11", 1000, "Riana: sound post, payment 2"], ["2026-12", 3000, "Riana: payment 3 $1,000; Chris LaRocca: music deposit $2,000"], ["2027-01", 1000, "Riana: payment 4"], ["2027-02", 3000, "Riana: payment 5 $1,000; Chris: music balance $2,000"], ["2027-03", 10350, "Riana: payment 6 $1,000; song licences $7,850; VFX clean-up $1,500"], ["2027-04", 10162.75, "Delivery: Riana's sound post and mix balance $4,900; colour $1,200; DCP, captions, M and E $2,300; storage drives $1,762.75"], ["2027-05", 2000, "Deal memos and contracts $1,500; festival fees $500"], ["2027-06", 3500, "Chain-of-title legal opinion $3,000; festival fees $500"], ["2027-07", 3000, "E and O insurance $2,500; festival fees $500"], ["2027-08", 2000, "Incorporation, only if needed $1,500; festival fees $500"], ["2027-09", 500, "Festival fees $500"]];
+  var JJ_PAID = 28380.31, SACHA_PAID = 7834, ADR = 452;
+  var KIT = [
+    {v:"hold", label:"On hold: $0", amt:0, hint:"Out of the budget for now (JJ, 5 Oct 2026)."},
+    {v:"june", label:"June Komodo: $1,225", amt:1225, hint:"Nick Depencier's RED Komodo for 1–14 June 2023 only, at Titan's 2023 rate ($87.50 a day)."},
+    {v:"proposed", label:"Proposed: $3,078", amt:3077.97, hint:"Claude's proposal (part F2): Nick's June Komodo $1,225 + Will's Z CAM for 2 June days $58.33 + June Contax lenses $1,000 (all Will's except one, most likely Nick's) + Blue Sheep camera $437.50 and lenses $357.14 for the 5 pickup days."},
+    {v:"plus", label:"Plus Titan-block lenses: $3,935", amt:3935.11, hint:"The proposal plus lenses for the 12 Titan days in Sept, Oct and Dec 2023, if someone's own lenses were used (Titan's kit had none)."},
+    {v:"report", label:"7 Aug report: $18,700", amt:18700, hint:"Sacha's figure: the purchase prices from the March 2023 budget sheet, not a rental value."}
+  ];
+  var ANDREA = {none:0, "2":1381.20, "3":1676.30};
+  var CREW = {out:0, min:16339.60, living:24553.60, actra:29260};
+  var CREW_LABEL = {min:"minimum wage", living:"living wage", actra:"union day rate benchmark"};
+  var DEFAULT = {opt:"2", kit:"hold", tac:true, oac:true, post:0, adr:"bs", hst:false, chris:false, andrea:"none", titan:false, adelaide:false, will:"out", crew:"out", writing:false, custom:[]};
+  var PRESETS = {
+    today: DEFAULT,
+    all: Object.assign({}, DEFAULT, {kit:"proposed", hst:true, chris:true, andrea:"2", will:"inkind", crew:"living", writing:true}),
+    nogrants: Object.assign({}, DEFAULT, {tac:false, oac:false})
+  };
+  var KEY = "ta-spending-hub-v1";
+  function clone(o){ return JSON.parse(JSON.stringify(o)); }
+  var S = clone(DEFAULT);
+  try { var saved = localStorage.getItem(KEY); if (saved) { S = Object.assign(clone(DEFAULT), JSON.parse(saved)); } } catch(e) {}
+  S.adr = "bs"; S.titan = false;
+  function save(){ try { localStorage.setItem(KEY, JSON.stringify(S)); } catch(e) {} }
+
+  var $ = function(id){ return document.getElementById(id); };
+  var money0 = new Intl.NumberFormat("en-CA",{style:"currency",currency:"CAD",maximumFractionDigits:0,minimumFractionDigits:0});
+  var money2 = new Intl.NumberFormat("en-CA",{style:"currency",currency:"CAD",minimumFractionDigits:2,maximumFractionDigits:2});
+  function f0(n){ return money0.format(Math.round(n)); }
+  function f2(n){ return money2.format(n); }
+  function pct(n){ return (Math.round(n*1000)/10).toFixed(1) + "%"; }
+  function esc(s){ return String(s).replace(/[&<>"']/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]; }); }
+
+  // ---- The model ----
+  function compute(){
+    var r = {rows:[], deferredRows:[], inkindRows:[]};
+    var baseCash = 0, spent = 0, committed = 0, tospend = 0;
+    var BL = BASE.map(function(l){ var c = Object.assign({}, l); if (LIVE && LIVE.amts[l.n] !== undefined) c.amt = LIVE.amts[l.n]; return c; });
+    BL.forEach(function(l){ baseCash += l.amt; if (l.stage==="spent") spent += l.amt; else if (l.stage==="committed") committed += l.amt; else tospend += l.amt; });
+    var post = LIVE ? LIVE.post : Math.max(0, Math.min(17747, +S.post || 0));
+    spent += post;
+    var added = [];
+    if (S.hst) added.push({n:"25", name:"HST on Riana's sound post", amt:1417});
+    if (S.chris) added.push({n:"26", name:"Chris at $5,000 instead of $4,000", amt:1000});
+    if (ANDREA[S.andrea]) added.push({n:"24", name:"Andrea: performer minimums and admin fee (" + S.andrea + " days)", amt:ANDREA[S.andrea]});
+    if (S.adelaide) added.push({n:"—", name:"Adelaide's invoice #4: the other $500", amt:500});
+    if (S.will === "cash") added.push({n:"22", name:"Will: the rest of the colour fee", amt:3800});
+    var kitOpt = KIT.filter(function(k){ return k.v===S.kit; })[0] || KIT[0];
+    var inkind = [];
+    if (kitOpt.amt) inkind.push({n:"21", name:"Camera and lens kit (in kind): " + kitOpt.label.split(":")[0].toLowerCase(), amt:kitOpt.amt});
+    if (S.will === "inkind") inkind.push({n:"22", name:"Will: the rest of the colour fee (in kind)", amt:3800});
+    var deferred = [];
+    if (CREW[S.crew]) deferred.push({n:"28", name:"Unpaid cast and crew, at the " + CREW_LABEL[S.crew], amt:CREW[S.crew]});
+    if (S.writing) deferred.push({n:"23", name:"JJ's writing fee", amt:2500});
+    if (S.will === "deferred") deferred.push({n:"22", name:"Will: the rest of the colour fee (deferred)", amt:3800});
+    (S.custom||[]).forEach(function(c){
+      var a = Math.max(0, +c.amt || 0); if (!a) return;
+      var row = {n:"+", name:(c.name||"Your line"), amt:a};
+      if (c.kind==="inkind") inkind.push(row); else if (c.kind==="deferred") deferred.push(row); else added.push(row);
+    });
+    var sum = function(a){ return a.reduce(function(t,x){ return t+x.amt; },0); };
+    r.added = added; r.inkind = inkind; r.deferred = deferred; r.kit = kitOpt; r.post = post;
+    r.addedSum = sum(added); r.inkindSum = sum(inkind); r.deferredSum = sum(deferred);
+    r.spent = spent; r.committed = committed; r.tospend = tospend;
+    r.masterCash = baseCash + post;
+    r.cash = baseCash + post + r.addedSum;
+    r.total = r.cash + r.inkindSum;
+    r.jjPaid = LIVE ? LIVE.jj : JJ_PAID;
+    r.saPaid = (LIVE ? LIVE.sacha3 : SACHA_PAID) + post + (S.adr==="sacha" ? ADR : 0);
+    var adr = LIVE ? LIVE.adr : ADR; r.sacha3 = LIVE ? LIVE.sacha3 : SACHA_PAID;
+    r.tbc = S.adr==="tbc" ? adr : 0;
+    r.bs = S.adr==="bs" ? adr : 0;
+    r.tac = S.tac ? 13800 : 0; r.oac = S.oac ? 10000 : 0;
+    r.opt = S.opt === "1" ? "1" : "2";
+    var owners = r.jjPaid + r.saPaid;
+    r.shareJJ = owners ? r.jjPaid/owners : 0.6;
+    r.gap = r.jjPaid - 0.6*owners; // + means JJ is over his 60%
+    // Who pays each line. Spent lines: who actually paid. The rest: planned, under the option chosen.
+    var left = Math.abs(r.gap);
+    r.catchLines = [];
+    function plan(a, n){ // a = the owners' part of one bill, in payment order
+      var jj = a*0.6, sa = a*0.4;
+      if (left > 0.004 && a > 0) {
+        var room = r.gap > 0 ? jj : sa, x = Math.min(left, room);
+        r.catchLines.push((x >= room - 0.005 ? "" : "part of ") + "line " + n);
+        if (r.opt === "1") { if (r.gap > 0) { jj -= x; sa += x; } else { sa -= x; jj += x; } }
+        left -= x;
+      }
+      return {jj:jj, sa:sa};
+    }
+    var spentRows = [], planRows = [];
+    BL.forEach(function(l){
+      var row = {n:l.n, name:l.name, stage:l.stage, amt:l.amt, jj:0, sa:0, other:0, by:l.by, src:l.src, when:l.when, srcLab:l.srcLab};
+      if (l.pay === "jj") row.jj = l.amt;
+      else if (l.pay === "sacha") row.sa = l.amt;
+      else if (l.pay === "bs") row.other = l.amt;
+      else {
+        var ownersPart = l.amt, grantPart = 0;
+        if (l.pay === "tac" && S.tac) { grantPart = l.amt; ownersPart = 0; }
+        if (l.pay === "oac" && S.oac) { grantPart = l.amt; ownersPart = 0; }
+        if (l.pay === "tacpart" && S.tac) { grantPart = l.tacPart; ownersPart = l.amt - l.tacPart; }
+        var pp = plan(ownersPart, l.n);
+        row.jj = pp.jj; row.sa = pp.sa; row.other = grantPart;
+        if (!grantPart && l.pay !== "owners") row.by = "JJ and Sacha (no " + (l.pay === "oac" ? "OAC" : "TAC") + " grant)";
+        else if (l.pay === "tacpart" && !S.tac) row.by = "JJ and Sacha (no TAC grant)";
+      }
+      (l.stage === "spent" ? spentRows : planRows).push(row);
+      if (l.n === "7") spentRows.push({n:"8", name:"Sacha's post costs he lists as this film's", stage:"spent", amt:post, jj:0, sa:post, other:0, by: post ? "Sacha, his own money" : "Out until Sacha itemises", off:!post, choice:!!post, src:"1007&range=A26:K61", when:"Dec 2025 – Jul 2026: Sacha lists them", srcLab:"Sacha's post costs tab"});
+    });
+    added.forEach(function(l){ var pp = plan(l.amt, l.n); planRows.push({n:l.n, name:l.name, stage:"added", amt:l.amt, jj:pp.jj, sa:pp.sa, other:0, by:"JJ and Sacha", choice:true, src:"1003", when:"Proposed, not agreed", srcLab:"To decide tab"}); });
+    r.spentRows = spentRows; r.planRows = planRows;
+    var tot = function(a,k){ return a.reduce(function(t,x){ return t + x[k]; },0); };
+    r.findJJ = tot(planRows,"jj"); r.findSa = tot(planRows,"sa");
+    r.find = r.findJJ + r.findSa;
+    r.gapLeft = r.opt === "1" ? (r.gap > 0 ? left : -left) : r.gap;
+    r.findCheck = r.cash - r.jjPaid - r.saPaid - r.tbc - r.bs - r.tac - r.oac;
+    r.jjEnd = r.jjPaid + r.findJJ; r.saEnd = r.saPaid + r.findSa;
+    r.repay = r.jjEnd + r.saEnd;
+    return r;
+  }
+
+  // ---- Bars ----
+  var tip = $("tip");
+  function showTip(e, html){
+    tip.innerHTML = html; tip.hidden = false;
+    var x, y;
+    if (e && e.clientX !== undefined && e.type.indexOf("mouse")===0) { x = e.clientX; y = e.clientY; }
+    else { var b = e.target.getBoundingClientRect(); x = b.left + b.width/2; y = b.top; }
+    var w = tip.offsetWidth, h = tip.offsetHeight;
+    var left = Math.min(window.innerWidth - w - 8, Math.max(8, x - w/2));
+    var top = y - h - 12; if (top < 8) top = y + 18;
+    tip.style.left = left + "px"; tip.style.top = top + "px";
+  }
+  function hideTip(){ tip.hidden = true; }
+  function drawBar(el, segs, scale, title){
+    el.innerHTML = "";
+    var live = segs.filter(function(s){ return s.amt > 0.004; });
+    var n = live.length;
+    el.setAttribute("aria-label", title + ": " + live.map(function(s){ return s.label + " " + f0(s.amt); }).join(", "));
+    live.forEach(function(s, i){
+      var d = document.createElement("div");
+      d.className = "seg" + (i===n-1 ? " end" : "");
+      var frac = s.amt/scale;
+      d.style.width = "calc((100% - " + ((n-1)*2) + "px) * " + frac.toFixed(6) + ")";
+      d.style.background = "var(" + s.color + ")";
+      d.tabIndex = 0;
+      d.setAttribute("aria-label", s.label + ": " + f2(s.amt));
+      var html = "<b>" + esc(s.label) + "</b><span class='n'>" + f2(s.amt) + " · " + pct(s.amt/ (s.of || scale)) + " of " + esc(s.ofLabel || "the total") + "</span>" + (s.note ? "<div class='n'>" + esc(s.note) + "</div>" : "");
+      d.addEventListener("mousemove", function(e){ showTip(e, html); });
+      d.addEventListener("mouseleave", hideTip);
+      d.addEventListener("focus", function(e){ showTip(e, html); });
+      d.addEventListener("blur", hideTip);
+      el.appendChild(d);
+    });
+  }
+  function niceStep(max){
+    var raw = max/5, p = Math.pow(10, Math.floor(Math.log10(raw))), m = raw/p;
+    return (m<=1?1:m<=2?2:m<=2.5?2.5:m<=5?5:10)*p;
+  }
+  function drawAxis(el, scale){
+    el.innerHTML = "";
+    var step = niceStep(scale);
+    for (var v=0; v<=scale+0.01; v+=step){
+      var t = document.createElement("div");
+      t.className = "tick" + (v===0 ? " first" : "");
+      t.style.left = (v/scale*100) + "%";
+      t.textContent = v===0 ? "$0" : "$" + (Math.round(v/100)/10) + "k";
+      if (v/scale > 0.97 && v!==0) t.style.transform = "translateX(-100%)";
+      el.appendChild(t);
+    }
+  }
+  function legend(el, segs){
+    el.innerHTML = segs.filter(function(s){ return s.amt > 0.004 || s.always; }).map(function(s){
+      return "<span class='item'><span class='sw' style='background:var(" + s.color + ")'></span><span>" + esc(s.label) + "</span><span class='amt'>" + f0(s.amt) + "</span></span>";
+    }).join("");
+  }
+
+  // ---- Render ----
+  var last = null;
+  function render(){
+    var r = compute();
+    // KPIs
+    $("k-total").textContent = f0(r.total);
+    var MM = LIVE ? r.masterCash : 77179.06;
+    $("k-total-sub").textContent = "Cash " + f0(r.cash) + " · in kind " + f0(r.inkindSum) + (Math.abs(r.total-MM) > 0.5 ? " · " + (r.total>MM?"+":"−") + f0(Math.abs(r.total-MM)) + " vs the money master" : "");
+    $("sa-own").textContent = f0(r.sacha3);
+    var lp = !!LIVE; $("c-post").disabled = lp; $("c-post-n").disabled = lp;
+    if (lp) { $("c-post").value = Math.min(17747, r.post); $("c-post-n").value = Math.round(r.post*100)/100; }
+    $("post-hint").textContent = lp ? "Live: " + f2(r.post) + ", the total of this film's lines on Sacha's post costs tab. Sacha changes it there." : "$0 until he itemises with receipts. His 7 Aug report says up to $17,747, some of it shared with other projects. With live figures on, this follows his post costs tab.";
+    $("k-spent").textContent = f0(r.spent);
+    $("k-spent-sub").textContent = "JJ " + f0(r.jjPaid) + " · Sacha " + f0(r.saPaid) + " · Blue Sheep " + f0(r.bs);
+    $("k-find").textContent = f0(r.find);
+    $("k-find-sub").textContent = "Option " + r.opt + ": JJ " + f0(r.findJJ) + " · Sacha " + f0(r.findSa);
+    $("k-owed").textContent = f0(r.deferredSum);
+    $("k-owed-sub").textContent = r.deferredSum ? r.deferred.length + (r.deferred.length===1?" deferred fee":" deferred fees") + ", outside the budget" : "No deferred fees chosen";
+
+    var scale = Math.max(r.total, 1);
+    var costSegs = [
+      {label:"Spent", amt:r.spent, color:"--spent", note:"Lines 1–8"},
+      {label:"Committed", amt:r.committed, color:"--committed", note:"Riana's sound post and mix day"},
+      {label:"Still to spend", amt:r.tospend, color:"--tospend", note:"Lines 11–20"},
+      {label:"Added by your choices", amt:r.addedSum, color:"--added", note:"Cash, from JJ and Sacha"},
+      {label:"In kind", amt:r.inkindSum, color:"--kind", note:"Same amount on both bars"}
+    ];
+    var fundSegs = [
+      {label:"JJ", amt:r.jjPaid + r.findJJ, color:"--jj", note:"Paid so far " + f0(r.jjPaid) + " + still to pay " + f0(r.findJJ) + " (Option " + r.opt + ")"},
+      {label:"Sacha", amt:r.saPaid + r.findSa, color:"--sacha", note:"Paid so far " + f0(r.saPaid) + " + still to pay " + f0(r.findSa) + " (Option " + r.opt + ")"},
+      {label: r.bs ? "Blue Sheep (ADR)" : "ADR, payer to confirm", amt:r.tbc + r.bs, color:"--tbc", note:"Riana's $452 session"},
+      {label:"TAC", amt:r.tac, color:"--tac", note:"Pending: due Thu 15 Oct"},
+      {label:"OAC", amt:r.oac, color:"--oac", note:"Only if JJ applies on 8 Oct"},
+      {label:"In kind", amt:r.inkindSum, color:"--kind", note:"Gear or work given, not cash"}
+    ];
+    drawBar($("bar-cost"), costSegs, scale, "What it costs");
+    drawBar($("bar-fund"), fundSegs, scale, "Who pays");
+    drawAxis($("axis"), scale);
+    legend($("leg-cost"), costSegs); legend($("leg-fund"), fundSegs);
+    var diff = r.total - (r.jjPaid + r.findJJ + r.saPaid + r.findSa + r.tbc + r.bs + r.tac + r.oac + r.inkindSum);
+    if (Math.abs(r.find - r.findCheck) > 0.01) diff = r.find - r.findCheck;
+    $("balance-check").innerHTML = Math.abs(diff) < 0.01 ? "<span class='pill ok'>Balanced</span><span>Costs and funding both come to " + f2(r.total) + ".</span>" : "<span class='pill warn'>Check</span><span>Off by " + f2(diff) + ".</span>";
+
+    // 60/40 meters (scale to the larger owner's end total)
+    var mscale = Math.max(r.jjEnd, r.saEnd, 1);
+    $("m-jj").style.width = (r.jjEnd ? r.jjPaid/r.jjEnd*100 : 0) + "%";
+    $("m-sa").style.width = (r.saEnd ? r.saPaid/r.saEnd*100 : 0) + "%";
+    document.querySelector("#m-jj").parentNode.style.width = (r.jjEnd/mscale*100) + "%";
+    document.querySelector("#m-sa").parentNode.style.width = (r.saEnd/mscale*100) + "%";
+    $("mv-jj").textContent = f0(r.jjPaid) + " paid + " + f0(r.findJJ) + " still to pay";
+    $("mv-sa").textContent = f0(r.saPaid) + " paid + " + f0(r.findSa) + " still to pay";
+    var owners = r.jjPaid + r.saPaid;
+    drawBar($("bar-share"), [
+      {label:"JJ", amt:r.jjPaid, color:"--jj", of:owners, ofLabel:"the owners' cash so far"},
+      {label:"Sacha", amt:r.saPaid, color:"--sacha", of:owners, ofLabel:"the owners' cash so far"}
+    ], owners, "Share of the owners' cash so far");
+    var g = r.gap, behind = g > 0 ? "Sacha" : "JJ", ahead = g > 0 ? "JJ" : "Sacha";
+    var ag = Math.abs(g);
+    var settle;
+    if (ag < 1) {
+      settle = "<strong>Even: the owners' cash is at 60/40.</strong>";
+    } else {
+      var bills = g > 0 ? ag/0.6 : ag/0.4;
+      var per = g > 0 ? "60 cents" : "40 cents";
+      var rianaClose = g > 0 ? 10900*0.6 : 10900*0.4;
+      settle = "<strong>" + ahead + " has put in " + f0(ag) + " more than his share (" + pct(r.shareJJ) + " JJ so far, against 60%).</strong>" +
+        "<span class='small'><b>Option 1, fill the gap over time:</b> the gap stays for now, and " + behind + " pays " + f0(bills) + " of the next shared bills alone (each dollar he pays alone moves " + per + " of " + ahead + "'s share). Riana's instalments are $1,000 a month from 15 Oct, so that's about " + (Math.round(bills/100)/10).toFixed(1) + " instalments" + (rianaClose < ag ? "; all of Riana's $10,900 alone would close " + f0(rianaClose) + " of it." : ".") + "</span>" +
+        "<span class='small'><b>Option 2, figure it out down the line:</b> every bill is split 60/40 from now, as if there were no gap. The " + f0(ag) + " stays on record, and JJ and Sacha agree later how and when it's settled. Until then " + ahead + " carries the extra.</span>" +
+        "<span class='small'>Showing Option " + r.opt + " (switch it at the top right). " + (r.opt === "1" ? (Math.abs(r.gapLeft) < 1 ? "The gap closes before the last bill, so the owners' cash ends at 60/40." : f0(r.gapLeft) + " of the gap is still open after the last bill.") : "The " + f0(ag) + " is still open at the end; JJ and Sacha settle it later.") + " Claude suggests either, or another strategy, unless information is missing. The Cash flow 60-40 tab shows both month by month.</span>";
+    }
+    $("settle").innerHTML = settle;
+
+    // Ladder
+    var lscale = Math.max(r.repay + r.deferredSum, 50000) * 1.08;
+    drawBar($("bar-ladder"), [
+      {label:"JJ's costs back", amt:r.jjEnd, color:"--jj", of:r.repay + r.deferredSum, ofLabel:"everything before profit"},
+      {label:"Sacha's costs back", amt:r.saEnd, color:"--sacha", of:r.repay + r.deferredSum, ofLabel:"everything before profit"},
+      {label:"Deferred pay", amt:r.deferredSum, color:"--deferred", of:r.repay + r.deferredSum, ofLabel:"everything before profit", note:r.deferred.map(function(d){ return d.name + " " + f0(d.amt); }).join("; ")}
+    ], lscale, "What the film has to earn");
+    $("lad-floor").style.left = (50000/lscale*100) + "%";
+    $("lad-floor").classList.toggle("flip", 50000/lscale > 0.5);
+    drawAxis($("axis-ladder"), lscale);
+    var steps = "<li><span class='k'>1 · Costs</span><span>JJ and Sacha get their cash back: JJ " + f0(r.jjEnd) + ", Sacha " + f0(r.saEnd) + " (" + (r.opt === "1" ? "Option 1: the gap is filled first" : "Option 2: 60/40 from now, gap settled later") + ").</span><span class='n'>first " + f0(r.repay) + "</span></li>";
+    steps += "<li><span class='k'>2 · Deferred</span><span>" + (r.deferredSum ? r.deferred.map(function(d){ return esc(d.name); }).join(", ") + ". JJ and Sacha's own fees are paid last." : "No deferred fees chosen. Try the cast and crew fees on the right.") + "</span><span class='n'>next " + f0(r.deferredSum) + "</span></li>";
+    steps += "<li><span class='k'>3 · Profit</span><span>Shared 60/40, less any profit shares agreed. To update: Will Sheppard gets one (JJ, 5 Oct 2026); the draft has Rachel and Ben at 12.5% each.</span><span class='n'>after " + f0(r.repay + r.deferredSum) + "</span></li>";
+    $("steps").innerHTML = steps;
+
+    // Table
+    var rows = "";
+    function cell(v){ return Math.abs(v) < 0.005 ? "<span class='z'>$0.00</span>" : f2(v); }
+    function tr(l, cls, stageLabel, color){
+      var url = l.src ? MASTER + "#gid=" + l.src : "";
+      var amt = url ? "<a href='" + url + "' target='_blank' rel='noopener' title='" + esc((l.srcLab || "Open the record") + " (opens the money master)") + "'>" + f2(l.amt) + "</a>" : f2(l.amt);
+      var stg = stageLabel ? "<div class='stg'><span class='stage'><span class='sw' style='background:var(" + color + ")'></span>" + stageLabel + "</span>" + (l.when ? " · " + esc(l.when) : "") + (url ? " · <a class='rec' href='" + url + "' target='_blank' rel='noopener'>" + esc(l.srcLab || "Open") + " ↗</a>" : "") + "</div>" : "";
+      return "<tr class='" + (cls||"") + "'><td>" + esc(l.n) + "</td><td>" + esc(l.name) + stg + "</td><td class='num'>" + amt + "</td><td class='num'>" + cell(l.jj) + "</td><td class='num'>" + cell(l.sa) + "</td><td class='num'>" + cell(l.other) + "</td><td>" + esc(l.by) + "</td></tr>";
+    }
+    function sumRow(label, a, cls, extraOther){
+      var t = {n:"", name:label, amt:0, jj:0, sa:0, other:extraOther||0, by:""};
+      a.forEach(function(x){ t.amt += x.amt; t.jj += x.jj; t.sa += x.sa; t.other += x.other; });
+      t.amt += extraOther||0;
+      return tr(t, cls, "", "");
+    }
+    var stageName = {spent:"Spent", committed:"Committed", tospend:"Still to spend", added:"Added"};
+    var stageColor = {spent:"--spent", committed:"--committed", tospend:"--tospend", added:"--added"};
+    rows += "<tr class='group'><td colspan='7'>Spent: who actually paid (from the records)</td></tr>";
+    r.spentRows.forEach(function(l){ rows += tr(l, l.off ? "off" : (l.choice ? "choice" : ""), stageName[l.stage], stageColor[l.stage]); });
+    rows += sumRow("Spent to date", r.spentRows, "sub");
+    rows += "<tr class='group'><td colspan='7'>Still to pay: planned under Option " + r.opt + " (nothing here is paid yet)</td></tr>";
+    r.planRows.forEach(function(l){ rows += tr(l, l.choice ? "choice" : "", stageName[l.stage], stageColor[l.stage]); });
+    rows += sumRow("Still to pay", r.planRows, "sub");
+    rows += sumRow("Cash budget", r.spentRows.concat(r.planRows), "total");
+    rows += "<tr class='group'><td colspan='7'>In kind (same amount as expense and revenue; not the owners' cash)</td></tr>";
+    var kindRows = r.inkind.map(function(l){ return {n:l.n, name:l.name, amt:l.amt, jj:0, sa:0, other:l.amt, by: l.n==="21" ? "Nick Depencier and Will Sheppard (June 2023); Blue Sheep (pickups)" : (l.n==="22" ? "Will" : "In kind"), src: l.n==="21" ? "1006&range=A63:K78" : "1003", srcLab: l.n==="21" ? "Overall budget, part F" : "To decide tab"}; });
+    if (kindRows.length) kindRows.forEach(function(l){ rows += tr(l, "choice", "In kind", "--kind"); });
+    else rows += "<tr class='off'><td>21</td><td>Camera and lens kit: on hold (part F of the Overall budget)</td><td class='num'>" + f2(0) + "</td><td></td><td></td><td></td><td>To decide</td></tr>";
+    rows += sumRow("Total budget", r.spentRows.concat(r.planRows, kindRows), "total");
+    rows += "<tr class='group'><td colspan='7'>Owed later, from the film's income (outside the budget)</td></tr>";
+    if (r.deferred.length) r.deferred.forEach(function(l){ rows += tr({n:l.n, name:l.name, amt:l.amt, jj:0, sa:0, other:l.amt, by:"The film's income, after costs (clauses 5–6)", src: l.n==="28" ? "1008" : "1003", srcLab: l.n==="28" ? "Cast & crew owed tab" : "To decide tab"}, "choice", "Deferred", "--deferred"); });
+    else rows += "<tr class='off'><td></td><td>No deferred fees chosen</td><td class='num'>" + f2(0) + "</td><td></td><td></td><td></td><td></td></tr>";
+    $("tbody").innerHTML = rows;
+    drawTimeline(r);
+    last = r;
+  }
+
+  // ---- Spending over time: cumulative line, solid for spent, faded for the plan ----
+  var SACHA_2023 = 7834; // undated until Sacha lists his payments (Ledger, section B)
+  var ADDED_MONTH = {"25":"2027-04", "26":"2027-02", "24":"2026-11", "—":"2026-10", "22":"2027-04", "+":"2027-04"};
+  var TL_START = Date.UTC(2023,4,1), TL_END = Date.UTC(2027,8,30);
+  function tlToday(){ return LIVE ? Math.min(Date.now(), TL_END) : Date.UTC(2026,9,5); }
+  var MILES = [
+    {t:Date.UTC(2023,5,7), text:"Principal photography, 1–14 June 2023"},
+    {t:Date.UTC(2023,9,28), text:"Three more camera blocks: Sept, Oct and Dec 2023"},
+    {t:Date.UTC(2025,6,4), text:"Editing with Adelaide Berardi starts, Jul 2025"},
+    {t:Date.UTC(2025,8,22), text:"Pickup 1, Sept 2025"},
+    {t:Date.UTC(2026,4,4), text:"Pickup 2, May 2026"},
+    {t:Date.UTC(2026,9,15), text:"Sound post starts with Riana, 15 Oct 2026"},
+    {t:Date.UTC(2027,3,30), text:"Delivery: final mix, colour, DCP, Apr 2027"}
+  ];
+  var MONTHS = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+  function ymEnd(ym){ var p = ym.split("-"); return Date.UTC(+p[0], +p[1], 0); }
+  function ymName(ym){ var p = ym.split("-"); return MONTHS[+p[1]-1] + " " + p[0]; }
+  function tlSeries(r){
+    var by = {};
+    function add(ym, amt, text, kind){ var m = by[ym] || (by[ym] = {spent:0, plan:0, items:[]}); m[kind] += amt; if (text) m.items.push({text:text, kind:kind}); }
+    SPENT_MONTHS.forEach(function(x){ add(x[0], x[1], x[2], "spent"); });
+    var inRange = function(ym){ return ym && ym >= "2023-05" && ym <= "2027-09"; };
+    var s3 = r.sacha3, dated3 = 0;
+    if (LIVE) LIVE.sachaDated.forEach(function(it){ if (inRange(it.ym)) { dated3 += it.amt; add(it.ym, it.amt, "Sacha: " + (it.to || "payment") + (it.what ? ", " + it.what : "") + " " + f2(it.amt), "spent"); } });
+    if (s3 - dated3 > 0.004) add("2023-06", s3 - dated3, "Sacha's 2023 money not dated yet, " + f2(s3 - dated3) + ": shown in June 2023 until he lists his payments with dates (Ledger, section B)", "spent");
+    var datedP = 0;
+    if (LIVE) LIVE.postDated.forEach(function(it){ if (inRange(it.ym)) { datedP += it.amt; add(it.ym, it.amt, "Sacha's post costs: " + (it.to || "payment") + (it.what ? ", " + it.what : "") + " " + f2(it.amt), "spent"); } });
+    var restP = r.post - datedP;
+    if (restP > 0.004) {
+      ["2025-12","2026-01","2026-02","2026-03","2026-04","2026-05","2026-06","2026-07"].forEach(function(ym, i){
+        add(ym, restP/8, i === 0 ? "Sacha's post costs not dated yet, " + f0(restP) + ", spread evenly over Dec 2025 – Jul 2026 until dated" : "Sacha's post costs (spread evenly until dated)", "spent");
+      });
+    }
+    var paidNew = 0;
+    if (LIVE) LIVE.newPaid.forEach(function(it){ if (inRange(it.ym)) { paidNew += it.amt; add(it.ym, it.amt, "Paid: " + (it.to || "payment") + (it.what ? ", " + it.what : "") + " " + f2(it.amt) + " (Ledger, section G)", "spent"); } });
+    var left = paidNew;
+    PLAN_MONTHS.forEach(function(x){
+      var take = Math.min(left, x[1]); left -= take;
+      if (x[1] - take > 0.004) add(x[0], x[1] - take, x[2] + (take > 0.004 ? " (" + f2(take) + " of it already paid)" : ""), "plan");
+    });
+    r.added.forEach(function(a){ add(ADDED_MONTH[a.n] || "2027-04", a.amt, a.name + " " + f2(a.amt) + " (added by your choices; timing is a guess)", "plan"); });
+    var list = [], cum = 0, y = 2023, mo = 5;
+    while (y < 2027 || (y === 2027 && mo <= 9)) {
+      var ym = y + "-" + (mo < 10 ? "0" : "") + mo, m = by[ym] || {spent:0, plan:0, items:[]};
+      cum += m.spent + m.plan;
+      list.push({ym:ym, t:ymEnd(ym), spent:m.spent, plan:m.plan, items:m.items, cum:cum});
+      mo++; if (mo > 12) { mo = 1; y++; }
+    }
+    return list;
+  }
+  var tlState = {list:null, sel:-1, geo:null};
+  function svgEl(tag, attrs, text){
+    var e = document.createElementNS("http://www.w3.org/2000/svg", tag);
+    for (var k in attrs) e.setAttribute(k, attrs[k]);
+    if (text !== undefined) e.textContent = text;
+    return e;
+  }
+  function drawTimeline(r){
+    var box = $("timeline"); if (!box) return;
+    var list = tlSeries(r); tlState.list = list; var TODAY = tlToday();
+    var W = Math.max(300, Math.round(box.clientWidth || 640)), narrow = W < 560;
+    var H = narrow ? 270 : 330;
+    var pad = {l: narrow ? 46 : 58, r: 14, t: 58, b: 30};
+    var total = list[list.length-1].cum;
+    var step = total > 60000 ? 20000 : 10000, yTop = Math.max(step, Math.ceil(total/step)*step);
+    var X = function(t){ return pad.l + (t - TL_START)/(TL_END - TL_START)*(W - pad.l - pad.r); };
+    var Y = function(v){ return H - pad.b - v/yTop*(H - pad.t - pad.b); };
+    tlState.geo = {X:X, Y:Y, W:W, H:H, pad:pad};
+    var svg = svgEl("svg", {viewBox:"0 0 " + W + " " + H, width:W, height:H, role:"img", tabindex:"0", "aria-label":"Cumulative spending, May 2023 to September 2027: " + f0(r.spent) + " spent by today, " + f0(total) + " by the end of the festival run. Use the left and right arrow keys to step through the months."});
+    // festival band
+    var fx0 = X(Date.UTC(2027,4,1)), fx1 = X(TL_END);
+    svg.appendChild(svgEl("rect", {x:fx0, y:pad.t, width:Math.max(0, fx1 - fx0), height:H - pad.t - pad.b, fill:"var(--curve)", "fill-opacity":"0.10"}));
+    svg.appendChild(svgEl("text", {x:fx1 - 4, y:H - pad.b - 8, "text-anchor":"end", "font-size":"11", fill:"var(--ink-2)", "font-family":"var(--body)"}, narrow ? "Festivals" : "Festival run"));
+    // grid + y labels
+    for (var v = 0; v <= yTop + 0.01; v += step) {
+      svg.appendChild(svgEl("line", {x1:pad.l, x2:W - pad.r, y1:Y(v), y2:Y(v), stroke:"var(--line)", "stroke-width":"1"}));
+      svg.appendChild(svgEl("text", {x:pad.l - 8, y:Y(v) + 4, "text-anchor":"end", "font-size":"11", fill:"var(--muted)", "font-family":"var(--mono)"}, v === 0 ? "$0" : "$" + (v/1000) + "k"));
+    }
+    // x labels (years)
+    [[TL_START, "May 2023", "’23"], [Date.UTC(2024,0,1), "2024", "’24"], [Date.UTC(2025,0,1), "2025", "’25"], [Date.UTC(2026,0,1), "2026", "’26"], [Date.UTC(2027,0,1), "2027", "’27"]].forEach(function(p, i){
+      var x = X(p[0]);
+      svg.appendChild(svgEl("line", {x1:x, x2:x, y1:H - pad.b, y2:H - pad.b + 5, stroke:"var(--axis)"}));
+      svg.appendChild(svgEl("text", {x:x, y:H - pad.b + 18, "text-anchor":i === 0 ? "start" : "middle", "font-size":"11", fill:"var(--muted)", "font-family":"var(--mono)"}, narrow ? p[2] : p[1]));
+    });
+    svg.appendChild(svgEl("line", {x1:pad.l, x2:W - pad.r, y1:H - pad.b, y2:H - pad.b, stroke:"var(--axis)"}));
+    // points
+    var spentPts = [[TL_START, 0]], spentEnd = 0;
+    list.forEach(function(m){ if (m.t <= TODAY) { spentPts.push([m.t, m.cum]); spentEnd = m.cum; } });
+    spentPts.push([TODAY, spentEnd]);
+    var planPts = [[TODAY, spentEnd]];
+    list.forEach(function(m){ if (m.t > TODAY) planPts.push([m.t, m.cum]); });
+    function path(pts){ return pts.map(function(p, i){ return (i ? "L" : "M") + X(p[0]).toFixed(1) + " " + Y(p[1]).toFixed(1); }).join(" "); }
+    function area(pts){ return path(pts) + " L" + X(pts[pts.length-1][0]).toFixed(1) + " " + Y(0).toFixed(1) + " L" + X(pts[0][0]).toFixed(1) + " " + Y(0).toFixed(1) + " Z"; }
+    svg.appendChild(svgEl("path", {d:area(spentPts), fill:"var(--curve)", "fill-opacity":"0.20"}));
+    svg.appendChild(svgEl("path", {d:area(planPts), fill:"var(--curve)", "fill-opacity":"0.07"}));
+    svg.appendChild(svgEl("path", {d:path(planPts), fill:"none", stroke:"var(--curve)", "stroke-opacity":"0.42", "stroke-width":"3", "stroke-linejoin":"round"}));
+    svg.appendChild(svgEl("path", {d:path(spentPts), fill:"none", stroke:"var(--curve)", "stroke-width":"3", "stroke-linejoin":"round"}));
+    list.forEach(function(m){
+      if (m.spent + m.plan < 0.005) return;
+      var future = m.t > TODAY;
+      svg.appendChild(svgEl("circle", {cx:X(m.t), cy:Y(m.cum), r:narrow ? 2.5 : 3, fill:"var(--curve)", "fill-opacity":future ? "0.45" : "1"}));
+    });
+    // today
+    var tx = X(TODAY);
+    svg.appendChild(svgEl("line", {x1:tx, x2:tx, y1:pad.t - 6, y2:H - pad.b, stroke:"var(--ink-2)", "stroke-dasharray":"4 3", "stroke-width":"1.5"}));
+    var tlab = svgEl("text", {x:tx - 6, y:Y(spentEnd) - 10, "text-anchor":"end", "font-size":"12", "font-weight":"600", fill:"var(--ink)", "font-family":"var(--body)", "paint-order":"stroke", stroke:"var(--surface)", "stroke-width":"4"}, "Today: " + f0(spentEnd) + " spent");
+    svg.appendChild(tlab);
+    svg.appendChild(svgEl("text", {x:W - pad.r - 2, y:Y(total) + 22, "text-anchor":"end", "font-size":"12", "font-weight":"600", fill:"var(--ink-2)", "font-family":"var(--body)", "paint-order":"stroke", stroke:"var(--surface)", "stroke-width":"4"}, (narrow ? f0(total) : f0(total) + " by Sep 2027")));
+    // milestones
+    MILES.forEach(function(ms, i){
+      var x = X(ms.t), cy = i % 2 ? 36 : 14;
+      svg.appendChild(svgEl("line", {x1:x, x2:x, y1:cy + 9, y2:pad.t, stroke:"var(--axis)", "stroke-width":"1"}));
+      var g = svgEl("g", {});
+      g.appendChild(svgEl("circle", {cx:x, cy:cy, r:9, fill:"var(--ink)"}));
+      g.appendChild(svgEl("text", {x:x, y:cy + 4, "text-anchor":"middle", "font-size":"11", "font-weight":"700", fill:"var(--surface)", "font-family":"var(--body)"}, String(i + 1)));
+      var tt = svgEl("title", {}, ms.text); g.appendChild(tt);
+      svg.appendChild(g);
+    });
+    // hover marker
+    var hv = svgEl("circle", {cx:0, cy:0, r:6, visibility:"hidden", fill:"var(--surface)", stroke:"var(--ink)", "stroke-width":"2", "pointer-events":"none"});
+    var hl = svgEl("line", {x1:0, x2:0, visibility:"hidden", y1:pad.t, y2:H - pad.b, stroke:"var(--ink)", "stroke-opacity":"0.25", "pointer-events":"none"});
+    svg.appendChild(hl); svg.appendChild(hv);
+    var overlay = svgEl("rect", {x:pad.l, y:0, width:W - pad.l - pad.r, height:H, fill:"transparent"});
+    svg.appendChild(overlay);
+    function pick(i, evt){
+      if (i < 0 || i >= list.length) return;
+      tlState.sel = i;
+      var m = list[i], x = X(m.t), y = Y(m.cum);
+      hv.setAttribute("cx", x); hv.setAttribute("cy", y); hl.setAttribute("x1", x); hl.setAttribute("x2", x); hv.setAttribute("visibility", "visible"); hl.setAttribute("visibility", "visible");
+      var future = m.t > TODAY;
+      var html = "<b>" + ymName(m.ym) + (future ? " (planned)" : "") + "</b>" +
+        "<span class='n'>" + (m.spent + m.plan > 0.004 ? (future ? "To pay this month " : "Paid this month ") + f2(m.spent + m.plan) + " · " : "Nothing paid this month · ") + "running total " + f2(m.cum) + "</span>" +
+        m.items.map(function(it){ return "<div class='n' style='margin-top:4px'>" + esc(it.text) + "</div>"; }).join("");
+      var b = svg.getBoundingClientRect(), sx = b.width / W;
+      showTip({clientX:b.left + x*sx, clientY:b.top + y*sx, type:"mouse"}, html);
+    }
+    function nearest(clientX){
+      var b = svg.getBoundingClientRect(), sx = b.width / W, x = (clientX - b.left)/sx;
+      var t = TL_START + (x - pad.l)/(W - pad.l - pad.r)*(TL_END - TL_START);
+      var best = 0, bd = Infinity;
+      list.forEach(function(m, i){ var d = Math.abs((m.t - 14*864e5) - t); if (d < bd) { bd = d; best = i; } });
+      return best;
+    }
+    overlay.addEventListener("mousemove", function(e){ pick(nearest(e.clientX), e); });
+    overlay.addEventListener("click", function(e){ pick(nearest(e.clientX), e); });
+    function unpick(){ hideTip(); hv.setAttribute("visibility", "hidden"); hl.setAttribute("visibility", "hidden"); }
+    overlay.addEventListener("mouseleave", unpick);
+    svg.addEventListener("keydown", function(e){
+      if (e.key === "ArrowRight" || e.key === "ArrowLeft") {
+        e.preventDefault();
+        var i = tlState.sel < 0 ? list.findIndex(function(m){ return m.t > TODAY; }) - 1 : tlState.sel + (e.key === "ArrowRight" ? 1 : -1);
+        pick(Math.max(0, Math.min(list.length - 1, i)));
+      } else if (e.key === "Escape") { unpick(); }
+    });
+    svg.addEventListener("blur", unpick);
+    box.innerHTML = ""; box.appendChild(svg);
+    // milestones list, summary, table
+    $("miles").innerHTML = MILES.map(function(ms, i){ return "<li><span class='num'>" + (i + 1) + "</span><span>" + esc(ms.text) + "</span></li>"; }).join("");
+    var planned = total - spentEnd;
+    $("tl-sum").innerHTML =
+      "<div><b>" + f0(spentEnd) + "</b><span>spent by today (" + pct(total ? spentEnd/total : 0) + " of the cash budget)</span></div>" +
+      "<div><b>" + f0(planned) + "</b><span>still to pay, Oct 2026 – Sep 2027</span></div>" +
+      "<div><b>" + f0(total) + "</b><span>the cash budget once the festival run is paid for" + (Math.abs(total - r.cash) > 0.5 ? " (check: " + f0(r.cash) + ")" : "") + "</span></div>";
+    var backed = 28832.31;
+    $("tl-note").innerHTML = "Where the dates come from: JJ's and Blue Sheep's payments are dated from the bank records on the money master's <a class='rec' href='" + MASTER + "#gid=1010&range=A1:L20' target='_blank' rel='noopener'>Ledger tab ↗</a> (" + f0(backed) + " of the spent total). " + (LIVE ? "Sacha's payments sit in the months he dated them on the Ledger and his post costs tab; anything he hasn't dated yet sits in June 2023 (his 2023 money) or is spread over Dec 2025 – Jul 2026 (post costs). Payments recorded in the Ledger's section G move from the plan to spent." : "Sacha's " + f0(r.sacha3) + " from 2023 sits in June 2023 until he lists his payments there" + (r.post > 0 ? ", and the post costs he lists are spread over Dec 2025 – Jul 2026 until dated" : "") + ".") + " What's still to pay follows the <a class='rec' href='" + MASTER + "#gid=1009&range=A34:J63' target='_blank' rel='noopener'>Cash flow schedule ↗</a>; dates after April 2027 are estimates. In-kind gear and deferred fees aren't cash, so they're not on this line.";
+    $("tl-rows").innerHTML = list.filter(function(m){ return m.spent + m.plan > 0.004; }).map(function(m){
+      return "<tr><td>" + ymName(m.ym) + "</td><td class='num'>" + (m.spent ? f2(m.spent) : "") + "</td><td class='num'>" + (m.plan ? f2(m.plan) : "") + "</td><td class='num'>" + f2(m.cum) + "</td><td>" + m.items.map(function(it){ return esc(it.text); }).join("<br>") + "</td></tr>";
+    }).join("");
+  }
+  var tlRaf = 0, tlW = 0;
+  window.addEventListener("resize", function(){
+    cancelAnimationFrame(tlRaf);
+    tlRaf = requestAnimationFrame(function(){ var b = $("timeline"); if (b && last && Math.abs(b.clientWidth - tlW) > 2) { tlW = b.clientWidth; drawTimeline(last); } });
+  });
+
+  // ---- Controls ----
+  function buildKit(){
+    var box = $("kit"); box.innerHTML = "";
+    KIT.forEach(function(k){
+      var id = "kit-" + k.v;
+      var i = document.createElement("input"); i.type = "radio"; i.name = "kit"; i.id = id; i.value = k.v;
+      var l = document.createElement("label"); l.htmlFor = id; l.textContent = k.label;
+      i.addEventListener("change", function(){ S.kit = k.v; sync(); });
+      box.appendChild(i); box.appendChild(l);
+    });
+  }
+  function buildCustom(){
+    var box = $("custom"); box.innerHTML = "";
+    (S.custom||[]).forEach(function(c, idx){
+      var row = document.createElement("div"); row.className = "crow";
+      row.innerHTML = "<input type='text' id='cn-" + idx + "' aria-label='Line name' placeholder='What it is'><input type='number' id='ca-" + idx + "' aria-label='Amount, dollars' min='0' step='1' placeholder='$'><select id='ck-" + idx + "' aria-label='How it is paid'><option value='cash'>Cash, from JJ and Sacha</option><option value='inkind'>In kind</option><option value='deferred'>Deferred, from income</option></select><button type='button' class='rm'>Remove</button>";
+      box.appendChild(row);
+      var n = row.querySelector("#cn-"+idx), a = row.querySelector("#ca-"+idx), k = row.querySelector("#ck-"+idx);
+      n.value = c.name || ""; a.value = c.amt || ""; k.value = c.kind || "cash";
+      n.addEventListener("input", function(){ c.name = n.value; save(); render(); });
+      a.addEventListener("input", function(){ c.amt = +a.value || 0; save(); render(); });
+      k.addEventListener("change", function(){ c.kind = k.value; save(); render(); });
+      row.querySelector(".rm").addEventListener("click", function(){ S.custom.splice(idx,1); buildCustom(); save(); render(); });
+    });
+  }
+  function optHint(){
+    var r = last || compute(), ag = Math.abs(r.gap), behind = r.gap > 0 ? "Sacha" : "JJ";
+    $("opt-hint").textContent = S.opt === "1"
+      ? behind + " pays the shared bills in full until the " + f0(ag) + " gap is closed, then 60/40. With the choices shown, that's " + (r.catchLines.length ? r.catchLines.join(", ").replace(/, ([^,]*)$/, " and $1") : "nothing yet") + (Math.abs(r.gapLeft) < 1 || r.opt !== "1" ? "" : ", and " + f0(Math.abs(r.gapLeft)) + " is still open at the end") + ". On the money master today, that's even by 30 Apr 2027 (Cash flow 60-40 tab)."
+      : "Every bill from here is split 60/40, as if there were no gap. The " + f0(ag) + " stays on record, and JJ and Sacha agree later how and when it's settled.";
+  }
+  function sync(){
+    // push state into controls
+    $("opt-1").checked = (S.opt === "1"); $("opt-2").checked = (S.opt !== "1");
+    KIT.forEach(function(k){ $("kit-"+k.v).checked = (S.kit===k.v); });
+    var ko = KIT.filter(function(k){ return k.v===S.kit; })[0] || KIT[0];
+    $("kit-hint").textContent = ko.hint;
+    $("c-tac").checked = !!S.tac; $("c-oac").checked = !!S.oac;
+    $("c-post").value = S.post; $("c-post-n").value = S.post;
+    $("c-adr").value = S.adr; $("c-hst").checked = !!S.hst; $("c-chris").checked = !!S.chris;
+    $("c-andrea").value = S.andrea; $("c-adelaide").checked = !!S.adelaide;
+    $("c-will").value = S.will; $("c-crew").value = S.crew; $("c-writing").checked = !!S.writing;
+    save(); render(); optHint();
+  }
+  function bind(id, key, kind){
+    var el = $(id);
+    el.addEventListener(kind==="check" ? "change" : (el.tagName==="SELECT" ? "change" : "input"), function(){
+      S[key] = kind==="check" ? el.checked : (kind==="num" ? Math.max(0, Math.min(17747, +el.value||0)) : el.value);
+      if (key==="post") { $("c-post").value = S.post; $("c-post-n").value = S.post; }
+      save(); render(); optHint();
+      if (id !== "c-post" && id !== "c-post-n") { var ko = KIT.filter(function(k){ return k.v===S.kit; })[0]; $("kit-hint").textContent = ko.hint; }
+    });
+  }
+  buildKit();
+  ["opt-1","opt-2"].forEach(function(id){ $(id).addEventListener("change", function(){ S.opt = $(id).value; save(); render(); optHint(); }); });
+  bind("c-tac","tac","check"); bind("c-oac","oac","check");
+  bind("c-post","post","num"); bind("c-post-n","post","num");
+  bind("c-adr","adr"); bind("c-hst","hst","check"); bind("c-chris","chris","check");
+  bind("c-andrea","andrea"); bind("c-adelaide","adelaide","check");
+  bind("c-will","will"); bind("c-crew","crew"); bind("c-writing","writing","check");
+  $("add-line").addEventListener("click", function(){ S.custom = S.custom || []; S.custom.push({name:"", amt:0, kind:"cash"}); buildCustom(); save(); var n = $("cn-" + (S.custom.length-1)); if (n) n.focus(); });
+  Array.prototype.forEach.call(document.querySelectorAll("[data-preset]"), function(b){
+    b.addEventListener("click", function(){ S = clone(PRESETS[b.getAttribute("data-preset")]); buildCustom(); sync(); });
+  });
+
+  function summary(){
+    var r = last || compute();
+    var ko = r.kit;
+    var lines = [
+      "Together, Alone spending hub: a scenario (" + (LIVE ? "live money master figures, read " + liveTime() : "money master figures as of 5 Oct 2026") + ")",
+      "Total budget " + f2(r.total) + " (cash " + f2(r.cash) + ", in kind " + f2(r.inkindSum) + ")",
+      "Spent " + f2(r.spent) + " · committed " + f2(r.committed) + " · still to spend " + f2(r.tospend + r.addedSum),
+      "Camera kit: " + ko.label,
+      "Grants: TAC " + (S.tac ? "yes" : "no") + ", OAC " + (S.oac ? "yes" : "no"),
+      "Sacha's post costs counted: " + f2(r.post) + " · Riana's ADR paid by: " + ({tbc:"to confirm", sacha:"Sacha", bs:"Blue Sheep"})[S.adr]
+    ];
+    if (r.added.length) lines.push("Cash added: " + r.added.map(function(a){ return a.name + " " + f2(a.amt); }).join("; "));
+    if (r.inkind.length) lines.push("In kind: " + r.inkind.map(function(a){ return a.name + " " + f2(a.amt); }).join("; "));
+    lines.push("Paid so far: JJ " + f2(r.jjPaid) + ", Sacha " + f2(r.saPaid) + ", Blue Sheep " + f2(r.bs) + " (who actually paid)");
+    lines.push("Still to pay from JJ and Sacha: " + f2(r.find) + " under Option " + r.opt + " (JJ " + f2(r.findJJ) + ", Sacha " + f2(r.findSa) + ")");
+    lines.push("60/40 so far: JJ " + pct(r.shareJJ) + " of the owners' cash; " + (r.gap>0 ? "JJ is " + f2(r.gap) + " over his 60%" : r.gap<0 ? "Sacha is " + f2(-r.gap) + " over his 40%" : "even"));
+    lines.push("Owed later from the film's income: " + f2(r.deferredSum) + (r.deferred.length ? " (" + r.deferred.map(function(a){ return a.name + " " + f2(a.amt); }).join("; ") + ")" : ""));
+    lines.push("Money master: " + MASTER);
+    return lines.join("\n");
+  }
+  $("copy").addEventListener("click", function(){
+    var text = summary();
+    var done = function(){ $("copied").textContent = "Copied. Paste it to Sacha or to Claude."; $("copy-fallback").hidden = true; };
+    var fail = function(){ var ta = $("copy-fallback"); ta.value = text; ta.hidden = false; ta.focus(); ta.select(); $("copied").textContent = "Copying isn't allowed here. The text is selected below: copy it yourself."; };
+    try { navigator.clipboard.writeText(text).then(done, fail); } catch(e) { fail(); }
+  });
+  window.addEventListener("scroll", hideTip, {passive:true});
+
+  // ---- Live figures from the money master, through the viewer's Google Sheets connector ----
+  // Snapshot figures (5 Oct 2026) render first; when the viewer has Google Sheets connected and allows it
+  // for this page, the hub re-reads the money master and every figure follows what JJ and Sacha type there.
+  var GS = "Google Sheets", SHEET_ID = "182VDJ1I1KCoP5u3-xpNBByN_ReSbqA6vz8vSyZw-Mgs";
+  var LIVE = null, liveParts = {}, liveMcp = null, livePerms = null, liveUnsubs = [], liveStamp = 0;
+  var LIVE_RANGES = {ob:"'Overall budget'!A6:E36", led:"'Ledger (every payment)'!A140:I320", post:"'Sacha''s post costs'!A28:I80"};
+  function num(v){
+    if (v === undefined || v === null || v === "") return 0;
+    var s = String(v).trim(), neg = s.indexOf("-") !== -1 || /^\(.*\)$/.test(s);
+    var n = parseFloat(s.replace(/[^0-9.]/g, ""));
+    return isNaN(n) ? 0 : (neg ? -n : n);
+  }
+  function ymOf(v){
+    if (!v) return null;
+    var m = String(v).match(/^(\d{4})-(\d{2})/);
+    if (m) return m[1] + "-" + m[2];
+    var d = new Date(v);
+    if (isNaN(d.getTime()) || d.getFullYear() < 2020 || d.getFullYear() > 2030) return null;
+    return d.getFullYear() + "-" + (d.getMonth() < 9 ? "0" : "") + (d.getMonth() + 1);
+  }
+  function setLive(state, msg){
+    var bar = $("livebar"); if (!bar) return;
+    bar.hidden = false; bar.setAttribute("data-state", state);
+    $("live-msg").textContent = msg;
+    var btn = $("live-btn");
+    btn.hidden = !(state === "ask" || state === "denied" || state === "error" || state === "live");
+    btn.textContent = state === "ask" ? "Show live figures" : state === "denied" ? "Open permissions" : "Refresh";
+    $("asof").textContent = state === "live" && LIVE ? "Live from the sheet" : "5 Oct 2026 (snapshot)";
+  }
+  function liveTime(){ var d = new Date(liveStamp || Date.now()); return d.toLocaleString("en-CA", {month:"short", day:"numeric", hour:"numeric", minute:"2-digit"}); }
+  function assemble(){
+    if (!liveParts.ob) return;
+    var L = {amts:{}, sachaDated:[], postDated:[], newPaid:[]};
+    liveParts.ob.forEach(function(r){ var n = String(r[0] || "").trim(); if (/^\d+b?$/.test(n) && r[4] !== undefined && r[4] !== "") L.amts[n] = num(r[4]); });
+    if (L.amts["1"] === undefined || L.amts["3"] === undefined) { onLiveError({code:"tool_error", message:"The Overall budget tab isn't laid out as expected."}); return; }
+    L.jj = (L.amts["1"]||0) + (L.amts["2"]||0) + (L.amts["4"]||0) + (L.amts["5"]||0) + (L.amts["6"]||0);
+    L.sacha3 = L.amts["3"] || 0; L.post = L.amts["8"] || 0; L.adr = L.amts["7"] || 0;
+    if (liveParts.led) {
+      var mode = "";
+      liveParts.led.forEach(function(r){
+        var a = String(r[0] || "").trim();
+        if (/^[A-Z] ·/.test(a)) { mode = a.charAt(0); return; }
+        if (!/^\d+$/.test(a)) return;
+        var amt = num(r[8]); if (!amt) return;
+        var it = {ym:ymOf(r[1]), amt:amt, to:String(r[5] || ""), what:String(r[6] || "")};
+        if (mode === "B") L.sachaDated.push(it); else if (mode === "G") L.newPaid.push(it);
+      });
+    }
+    if (liveParts.post) {
+      liveParts.post.forEach(function(r){
+        if (!/^\d+$/.test(String(r[0] || "").trim())) return;
+        var amt = num(r[8]); if (!amt) return;
+        L.postDated.push({ym:ymOf(r[1]), amt:amt, to:String(r[2] || ""), what:String(r[3] || "")});
+      });
+    }
+    LIVE = L;
+    setLive("live", "Live from the money master (read " + liveTime() + "): every figure here follows what JJ and Sacha type in the sheet.");
+    render(); optHint();
+  }
+  function retract(){ LIVE = null; liveParts = {}; render(); optHint(); }
+  function onLiveError(err, part){
+    var code = (err && err.code) || "upstream_error";
+    var snap = " Showing the 5 Oct 2026 snapshot.";
+    if (code === "needs_reauth") { retract(); setLive("error", "Reconnect Google Sheets in claude.ai Settings → Connectors to see live figures." + snap); }
+    else if (code === "server_not_connected" || code === "server_not_found") { retract(); setLive("error", "Add Google Sheets in claude.ai Settings → Connectors, signed in with the Google account the money master is shared with, to see live figures." + snap); }
+    else if (code === "selection_required") { retract(); setLive("error", "Choose which Google Sheets connection this page should use, then refresh." + snap); }
+    else if (code === "not_in_manifest" || code === "consent_required") { retract(); setLive("denied", "Google Sheets isn't allowed for this page, so it can't read the money master." + snap); }
+    else if (code === "blocked_by_policy" || code === "approval_required") { retract(); setLive("off", "Your organization's settings don't let this page read Google Sheets." + snap); }
+    else if (code === "not_granted" || code === "capability_disabled" || code === "capability_removed") { retract(); setLive("off", "Live figures aren't available in this view." + snap); }
+    else if (code === "tool_error") { if (!LIVE) setLive("error", "Google Sheets couldn't open the money master" + (part === "post" || part === "led" ? " tab it needs" : "") + ": your Google account may not have access (ask JJ to share it)." + snap); else setLive("live", "Live from the money master (read " + liveTime() + "). One tab couldn't be read just now: " + (err.message || "") ); }
+    else if (code === "user_changed") { liveUnsubs.forEach(function(u){ u(); }); liveUnsubs = []; }
+    else { if (!LIVE) setLive("error", "Couldn't reach Google Sheets just now (" + code + "). It tries again in a few minutes, or press Refresh." + snap); }
+  }
+  function startLive(){
+    if (!liveMcp) return;
+    liveUnsubs.forEach(function(u){ u(); }); liveUnsubs = [];
+    setLive("loading", "Reading the money master…");
+    Object.keys(LIVE_RANGES).forEach(function(k){
+      try {
+        var un = liveMcp.watchTool(GS, "get_values", {spreadsheetId:SHEET_ID, range:LIVE_RANGES[k]}, function(ev){
+          if (ev.type === "data") {
+            var p = ev.result && ev.result.payload;
+            if (typeof p === "string") { try { p = JSON.parse(p); } catch(e) {} }
+            var vals = p && (p.values || (p.valueRange && p.valueRange.values));
+            if (!Array.isArray(vals)) { if (p && typeof p === "object" && !("values" in p)) vals = []; else { onLiveError({code:"tool_error", message:"Unexpected answer from Google Sheets."}, k); return; } }
+            liveParts[k] = vals;
+            liveStamp = (ev.result.cache && ev.result.cache.storedAt) || Date.now();
+            assemble();
+          } else onLiveError(ev.error, k);
+        }, {cache:{staleTime:60000}, refetchInterval:300000});
+        liveUnsubs.push(un);
+      } catch(e) { onLiveError({code:"bad_request"}, k); }
+    });
+  }
+  function refreshLive(){
+    if (!liveMcp) return;
+    var done = function(){ startLive(); };
+    try { liveMcp.invalidate(GS, "get_values").then(done, done); } catch(e) { done(); }
+  }
+  $("live-btn").addEventListener("click", function(){
+    var st = $("livebar").getAttribute("data-state");
+    if (st === "denied" && livePerms) { livePerms.manage().then(function(){ return livePerms.state("mcp:" + GS); }).then(function(s){ if (s !== "denied" && s !== "unavailable") startLive(); }, function(){ setLive("denied", "Open this page's Permissions menu and turn Google Sheets on, then refresh."); }); return; }
+    if (st === "live" || st === "error") { refreshLive(); return; }
+    startLive();
+  });
+  (function bootLive(){
+    setLive("off", "Snapshot of the money master, 5 Oct 2026. Open the hub in claude.ai with Google Sheets connected to see live figures, or open the money master itself.");
+    if (!window.claude || typeof window.claude.use !== "function") return;
+    window.claude.use("mcp").then(function(mcp){
+      if (!mcp) return;
+      liveMcp = mcp;
+      return window.claude.use("permissions").catch(function(){ return null; }).then(function(perms){
+        livePerms = perms;
+        var p = perms ? perms.state("mcp:" + GS).catch(function(){ return "prompt"; }) : Promise.resolve("prompt");
+        return p.then(function(s){
+          if (s === "granted") startLive();
+          else if (s === "denied") setLive("denied", "Google Sheets is turned off for this page, so it shows the 5 Oct 2026 snapshot.");
+          else setLive("ask", "Showing the 5 Oct 2026 snapshot. Show live figures to read the money master through your Google Sheets connector, so Sacha's latest entries count.");
+        });
+      });
+    }, function(){});
+  })();
+
+  buildCustom();
+  sync();
+})();
+</script>
+
+</body>
+</html>
