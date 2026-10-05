@@ -210,7 +210,27 @@ td.num a:hover,a.rec:hover{text-decoration-style:solid}
 </style>
 </head>
 <body>
-<div style="max-width:1180px;margin:0 auto;padding:12px 20px 0;font:13px/1.45 var(--body,system-ui),sans-serif;color:var(--ink-2,#4f504c)">Snapshot of the Together, Alone Spending Hub, 5 Oct 2026. It works offline and saves nothing to Drive. Every amount links to its record in 00 MONEY MASTER (open it with the Google account the money master is shared with). The live hub on claude.ai reads the money master directly, so it shows the latest entries.</div>
+<div class="sharebar" id="sharebar" style="max-width:1180px;margin:0 auto;padding:14px 20px 0;display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;font:13.5px/1.45 var(--body,system-ui),sans-serif;color:var(--ink-2,#4f504c)">
+  <span style="flex:1 1 320px;min-width:0"><b style="color:var(--ink,#141514)">Share this hub:</b> anyone with this link can open it, no account needed. Figures as of 5 Oct 2026; the money master stays the source of truth.</span>
+  <button type="button" id="share-copy" class="btn">Copy link</button>
+  <a id="share-mail" class="btn" style="text-decoration:none" href="mailto:?subject=Together%2C%20Alone%20Spending%20Hub&amp;body=The%20Together%2C%20Alone%20Spending%20Hub%3A%20https%3A%2F%2Fjjcardillo.github.io%2Ftogether-alone%2Fspending-hub.html">Email the link</a>
+  <button type="button" id="share-native" class="btn" hidden>Share…</button>
+  <span id="share-msg" role="status" style="color:var(--good,#006300);min-width:0"></span>
+</div>
+<script>
+(function(){
+  var url = "https://jjcardillo.github.io/together-alone/spending-hub.html";
+  var msg = document.getElementById("share-msg");
+  document.getElementById("share-copy").addEventListener("click", function(){
+    var ok = function(){ msg.textContent = "Link copied."; };
+    var fail = function(){ msg.textContent = url; };
+    try { navigator.clipboard.writeText(url).then(ok, fail); } catch(e) { fail(); }
+  });
+  var nat = document.getElementById("share-native");
+  if (navigator.share) { nat.hidden = false; nat.addEventListener("click", function(){ navigator.share({title:"Together, Alone Spending Hub", url:url}).catch(function(){}); }); }
+})();
+</script>
+
 
 <div class="wrap">
   <header class="top">
